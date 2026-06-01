@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Mercado Livre × Blip — Visão & Arquitetura de Orquestração</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --blip:#0096FA;
+    --blip-2:#00C2FF;
+    --blip-dim:#0078C8;
+    --meli:#FFE600;
+    --meli-2:#FFD100;
+    --bg:#05080F;
+    --bg-2:#0A0F1C;
+    --surface:#11182B;
+    --surface-2:#161E36;
+    --line:rgba(0,150,250,.18);
+    --line-soft:rgba(255,255,255,.06);
+    --line-meli:rgba(255,230,0,.22);
+    --text:#E8EDF7;
+    --dim:#8893A8;
+    --mute:#5D6679;
+    --green:#25D366;
+    --mono:'JetBrains Mono',monospace;
+  }
+  html,body{
+    background:var(--bg);color:var(--text);
+    font-family:'Lexend',system-ui,sans-serif;font-weight:400;line-height:1.55;
+    -webkit-font-smoothing:antialiased;min-width:1280px;
+  }
+  body{
+    background:
+      radial-gradient(1100px 700px at 80% -100px, rgba(0,150,250,.10), transparent 70%),
+      radial-gradient(900px 500px at -100px 700px, rgba(255,230,0,.05), transparent 70%),
+      var(--bg);
+  }
+  .container{max-width:1440px;margin:0 auto;padding:0 48px}
+
+  /* ===== TOPBAR / TABS ===== */
+  .topbar{position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);background:rgba(5,8,15,.85);border-bottom:1px solid var(--line-soft)}
+  .topbar-inner{max-width:1440px;margin:0 auto;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:15px;letter-spacing:-.2px}
+  .brand-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#04121f;box-shadow:0 4px 20px rgba(0,150,250,.4)}
+  .brand .x{color:var(--mute);font-weight:300;margin:0 2px}
+  .brand .m{color:var(--meli)}
+  .tabs{display:flex;gap:6px;background:var(--surface);padding:5px;border-radius:12px;border:1px solid var(--line-soft)}
+  .tab{padding:9px 20px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--dim);cursor:pointer;border:none;background:transparent;font-family:inherit;transition:.25s;letter-spacing:.2px}
+  .tab:hover{color:var(--text)}
+  .tab.active{background:linear-gradient(135deg,var(--blip),var(--blip-dim));color:#fff;box-shadow:0 4px 16px rgba(0,150,250,.35)}
+
+  .panel{display:none;animation:fade .5s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ===== shared bits ===== */
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--blip);font-weight:500;margin-bottom:18px}
+  .accent{background:linear-gradient(100deg,var(--blip),var(--blip-2) 55%,var(--meli));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:500}
+  .tag.agent{background:rgba(0,150,250,.14);color:var(--blip)}
+  .tag.system{background:rgba(255,255,255,.06);color:var(--dim)}
+  .tag.agent-y{background:var(--line-meli);color:var(--meli)}
+
+  /* ===== TAB 1 — INTRO ===== */
+  .intro-hero{padding:120px 0 80px}
+  .intro-hero .kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:100px;border:1px solid var(--line);background:rgba(0,150,250,.05);font-size:12.5px;color:var(--dim);margin-bottom:34px;font-family:var(--mono);letter-spacing:.5px}
+  .intro-hero .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 9px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+  .intro-hero h1{font-size:64px;font-weight:800;line-height:1.04;letter-spacing:-2px;max-width:18ch}
+  .intro-hero .lead{margin-top:28px;font-size:20px;color:var(--dim);font-weight:300;max-width:62ch}
+  .intro-hero .lead strong{color:var(--text);font-weight:500}
+
+  .intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:64px}
+  .istat{padding:30px 26px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);position:relative;overflow:hidden}
+  .istat::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--blip),transparent)}
+  .istat .n{font-size:38px;font-weight:800;letter-spacing:-1.5px;line-height:1;background:linear-gradient(120deg,#fff,var(--blip));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .istat .l{margin-top:12px;font-size:13.5px;color:var(--dim);font-weight:300}
+
+  .intro-band{margin-top:70px;padding:44px 46px;border-radius:20px;border:1px solid var(--line-meli);background:linear-gradient(135deg,rgba(255,230,0,.05),rgba(0,150,250,.04));display:flex;align-items:center;gap:30px}
+  .intro-band .icon{font-size:30px}
+  .intro-band .txt h3{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px}
+  .intro-band .txt p{color:var(--dim);font-weight:300;font-size:15.5px;max-width:80ch}
+  .intro-band .txt p b{color:var(--text);font-weight:600}
+
+  .backers{margin-top:48px;display:flex;align-items:center;gap:18px;color:var(--mute);font-size:13px;font-family:var(--mono);letter-spacing:.5px;flex-wrap:wrap}
+  .backers span{color:var(--dim)}
+  .backers .sep{color:var(--line)}
+
+  /* ===== TAB 2 — ARCHITECTURE ===== */
+  .arch-hero{padding:80px 0 40px}
+  .hero-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:60px;align-items:start}
+  .hero-grid h1{font-size:44px;font-weight:800;line-height:1.08;letter-spacing:-1.4px}
+  .hero-grid p{margin-top:22px;color:var(--dim);font-weight:300;font-size:16px;max-width:60ch}
+  .hero-meta{border-left:1px solid var(--line-soft);padding-left:30px;display:flex;flex-direction:column;gap:22px}
+  .hero-meta .label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+  .hero-meta .value{display:block;font-size:14.5px;color:var(--text);font-weight:500}
+
+  .section-title{padding:30px 0 10px}
+  .section-title h2{font-size:30px;font-weight:700;letter-spacing:-.8px;margin-bottom:14px}
+  .section-title p{color:var(--dim);font-weight:300;font-size:15px;max-width:90ch}
+
+  .legend{display:flex;gap:28px;margin:26px 0 10px;flex-wrap:wrap}
+  .legend .item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--dim);font-weight:300}
+  .legend .ln{width:30px;height:0;border-top:2px solid}
+  .legend .ln.blue{border-color:var(--blip)}
+  .legend .ln.green{border-color:var(--green);border-top-style:dashed}
+  .legend .ln.white{border-color:rgba(255,255,255,.6)}
+
+  /* ===== DIAGRAM ===== */
+  .stage{margin:30px 0 50px;padding:46px 40px 50px;border-radius:24px;border:1px solid var(--line-soft);background:linear-gradient(180deg,var(--bg-2),rgba(10,15,28,.4));position:relative;overflow:hidden}
+  .stage::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:26px 26px;opacity:.6;pointer-events:none}
+  .stage>*{position:relative;z-index:1}
+
+  /* channel band */
+  .band-label{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:14px}
+  .channel{display:flex;justify-content:center;gap:14px}
+  .chan-node{display:flex;align-items:center;gap:10px;padding:13px 22px;border-radius:13px;border:1px solid var(--line-soft);background:var(--surface)}
+  .chan-node.wa{border-color:rgba(37,211,102,.4);background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(37,211,102,.03))}
+  .chan-node .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .chan-node.wa .ic{background:var(--green);color:#04121f;font-weight:800}
+  .chan-node .nm{font-size:14px;font-weight:500}
+  .chan-node .sub{font-size:11px;color:var(--mute);font-family:var(--mono)}
+
+  /* vertical connector (white) */
+  .vconn{display:flex;flex-direction:column;align-items:center;margin:6px 0}
+  .vconn .ll{width:2px;height:34px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(0,150,250,.5))}
+  .vconn .ar{color:rgba(255,255,255,.6);font-size:14px;margin-top:-6px}
+
+  /* hub */
+  .hub{margin:0 auto;max-width:760px;border-radius:18px;border:1px solid var(--blip);background:linear-gradient(135deg,rgba(0,150,250,.16),rgba(0,150,250,.04));padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;box-shadow:0 0 50px rgba(0,150,250,.18)}
+  .hub-left{display:flex;align-items:center;gap:18px}
+  .hub-mark{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#04121f;flex-shrink:0}
+  .hub-txt .t{font-size:19px;font-weight:700;letter-spacing:-.4px}
+  .hub-txt .s{font-size:12.5px;color:var(--dim);font-weight:300;margin-top:3px}
+  .hub-proto{display:flex;gap:8px}
+  .hub-proto .p{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;padding:7px 12px;border-radius:8px;background:rgba(0,150,250,.16);color:var(--blip);border:1px solid var(--line)}
+
+  /* split into two sides + bridge */
+  .split{display:grid;grid-template-columns:1fr 132px 1fr;gap:0;margin-top:14px;align-items:stretch}
+  .vconn-split{display:flex;justify-content:space-around;margin:6px 0 14px}
+  .vconn-split .ll{width:2px;height:30px;background:linear-gradient(180deg,rgba(0,150,250,.5),rgba(0,150,250,.15))}
+
+  .side{border-radius:18px;padding:24px 22px}
+  .side.aqui{border:1px solid var(--line);background:linear-gradient(160deg,rgba(0,150,250,.07),transparent)}
+  .side.la{border:1px solid var(--line-meli);background:linear-gradient(160deg,rgba(255,230,0,.05),transparent)}
+  .side-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .side-head .h{font-size:15px;font-weight:700;letter-spacing:-.2px}
+  .side-head .where{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:6px}
+  .side.aqui .where{background:rgba(0,150,250,.14);color:var(--blip)}
+  .side.la .where{background:var(--line-meli);color:var(--meli)}
+
+  .node{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft);margin-bottom:10px;transition:transform .25s,border-color .25s}
+  .node:last-child{margin-bottom:0}
+  .node:hover{transform:translateX(3px);border-color:var(--line)}
+  .node .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .side.aqui .node .dot{background:var(--blip);box-shadow:0 0 10px rgba(0,150,250,.6)}
+  .side.la .node .dot{background:var(--meli);box-shadow:0 0 10px rgba(255,230,0,.5)}
+  .node .nbody{flex:1}
+  .node .nt{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:3px}
+  .node .nd{font-size:12px;color:var(--dim);font-weight:300;line-height:1.4}
+
+  /* bridge */
+  .bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 8px}
+  .bridge .blabel{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--mute);writing-mode:vertical-rl;text-orientation:mixed;position:absolute}
+  .flow{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+  .flow .proto{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:1px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--blip);white-space:nowrap}
+  .flow .proto.mcp{color:var(--green);border-color:rgba(37,211,102,.3)}
+  .arrows{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%}
+  .arr-line{position:relative;width:100%;height:2px;background:repeating-linear-gradient(90deg,var(--blip) 0 8px,transparent 8px 14px);animation:dash 1s linear infinite}
+  .arr-line.g{background:repeating-linear-gradient(90deg,var(--green) 0 8px,transparent 8px 14px)}
+  @keyframes dash{to{background-position:14px 0}}
+  .arr-bi{font-size:13px;color:var(--blip);letter-spacing:-2px}
+  .arr-bi.g{color:var(--green)}
+  .bridge-note{font-size:11px;color:var(--mute);text-align:center;font-weight:300;line-height:1.4;max-width:120px}
+
+  /* footer meta */
+  .meta-foot{margin-top:10px;padding:26px 30px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);display:grid;grid-template-columns:repeat(2,1fr);gap:14px 40px}
+  .meta-foot .row{font-size:13px;color:var(--dim);font-weight:300}
+  .meta-foot .row .k{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--blip);margin-right:8px}
+  .meta-foot .row .k.y{color:var(--meli)}
+
+  .footer{padding:40px 0 70px;text-align:center;color:var(--mute);font-size:12px;font-family:var(--mono);letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">b</div>
+      Blip <span class="x">×</span> <span class="m">Mercado Livre</span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="intro">Visão Blip</button>
+      <button class="tab" data-tab="arch">Arquitetura</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 1 — INTRO ============ -->
+<div class="panel active" id="panel-intro">
+  <section class="container intro-hero">
+    <div class="kicker"><span class="pulse"></span> A Blip já opera o WhatsApp oficial do Mercado Livre</div>
+    <h1>A camada de inteligência conversacional <span class="accent">já dentro de casa.</span></h1>
+    <p class="lead">A Blip é uma plataforma de inteligência conversacional com <strong>25 anos de trajetória</strong>, presente em 32 países e escolhida por mais de 4.000 marcas. Esta conversa não é sobre entrada — é sobre <strong>o próximo nível de orquestração</strong> do ecossistema Mercado Livre no WhatsApp.</p>
+
+    <div class="intro-grid">
+      <div class="istat"><div class="n">25 anos</div><div class="l">de inteligência conversacional</div></div>
+      <div class="istat"><div class="n">32</div><div class="l">países de operação</div></div>
+      <div class="istat"><div class="n">+4.000</div><div class="l">marcas — 240 das 500 maiores do mundo</div></div>
+      <div class="istat"><div class="n">2016</div><div class="l">aliada oficial Meta desde então</div></div>
+    </div>
+
+    <div class="intro-band">
+      <div class="icon">🤝</div>
+      <div class="txt">
+        <h3>Já parceira de tecnologia do Mercado Livre no WhatsApp</h3>
+        <p>Não estamos pedindo entrada nem propondo substituir o que vocês construíram. A Blip é a <b>camada que orquestra os sistemas e agentes do Mercado Livre</b> e os leva à conversa — onde o cliente já está. A arquitetura está na aba ao lado.</p>
+      </div>
+    </div>
+
+    <div class="backers">
+      <span>Respaldo de investidores:</span> Microsoft <span class="sep">·</span> SoftBank <span class="sep">·</span> Warburg Pincus
+    </div>
+  </section>
+</div>
+
+<!-- ============ TAB 2 — ARCHITECTURE ============ -->
+<div class="panel" id="panel-arch">
+
+  <section class="container arch-hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Arquitetura de orquestração</div>
+        <h1>Sistemas conversacionais lá e aqui,<br><span class="accent">conversando entre si.</span></h1>
+        <p>O Mercado Livre já tem inteligência própria — o agente de IA do Mercado Pago, recomendação, antifraude e risco rodando há uma década. A Blip não reconstrói isso: orquestra esses sistemas e agentes via protocolos abertos (A2A e MCP) e os leva ao WhatsApp como uma jornada única.</p>
+      </div>
+      <div class="hero-meta">
+        <div><span class="label">Orquestrador</span><span class="value">Blip Studio · Agent-to-Agent (A2A)</span></div>
+        <div><span class="label">Sistemas de registro (ML)</span><span class="value">Mercado Pago · Catálogo · Mercado Envios</span></div>
+        <div><span class="label">Inteligências (ML)</span><span class="value">Recomendação · Antifraude · Mercado Ads</span></div>
+        <div><span class="label">Canais</span><span class="value">WhatsApp · Click-to-WhatsApp · RCS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section-title">
+    <div class="eyebrow">Uma página · dois lados · um orquestrador</div>
+    <h2>Como a Blip orquestra o ecossistema Mercado Livre.</h2>
+    <p>O Blip Studio recebe a conversa no WhatsApp e roteia, agente a agente, para os sistemas e agentes que o Mercado Livre já mantém — devolvendo contexto e sinais para enriquecê-los em tempo real.</p>
+    <div class="legend">
+      <div class="item"><span class="ln blue"></span> Orquestração agente-a-agente (A2A)</div>
+      <div class="item"><span class="ln green"></span> Contexto, dados e ferramentas via MCP</div>
+      <div class="item"><span class="ln white"></span> Canal de saída ao cliente</div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="stage">
+
+      <!-- CHANNEL -->
+      <div class="band-label">Onde o cliente está</div>
+      <div class="channel">
+        <div class="chan-node wa"><div class="ic">W</div><div><div class="nm">WhatsApp</div><div class="sub">canal primário</div></div></div>
+        <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">↗</div><div><div class="nm">Click-to-WhatsApp</div><div class="sub">Ads → conversa</div></div></div>
+        <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">≡</div><div><div class="nm">RCS</div><div class="sub">canal complementar</div></div></div>
+      </div>
+
+      <div class="vconn"><div class="ll"></div><div class="ar">▼</div></div>
+
+      <!-- HUB -->
+      <div class="hub">
+        <div class="hub-left">
+          <div class="hub-mark">b</div>
+          <div class="hub-txt">
+            <div class="t">Blip Studio — Orquestrador Conversacional</div>
+            <div class="s">Recebe a conversa, identifica intenção e roteia para o agente certo — em cada lado.</div>
+          </div>
+        </div>
+        <div class="hub-proto">
+          <span class="p">MULTI-AGENTE</span>
+          <span class="p">A2A</span>
+          <span class="p">MCP</span>
+        </div>
+      </div>
+
+      <div class="vconn-split"><div class="ll"></div><div class="ll"></div></div>
+
+      <!-- SPLIT: AQUI | BRIDGE | LÁ -->
+      <div class="split">
+
+        <!-- AQUI (BLIP) -->
+        <div class="side aqui">
+          <div class="side-head">
+            <div class="h">Agentes conversacionais Blip</div>
+            <div class="where">Aqui</div>
+          </div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Vendas <span class="tag agent">agente</span></div><div class="nd">Vitrine e descoberta no chat sobre o catálogo do ML.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Pagamentos <span class="tag agent">agente</span></div><div class="nd">Interface do Mercado Pago no WhatsApp: Pix, boleto, fatura.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Pós-venda <span class="tag agent">agente</span></div><div class="nd">Rastreamento, trocas e devoluções resolvidas na conversa.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Growth & CRM <span class="tag agent">agente</span></div><div class="nd">Réguas de ciclo de vida, campanhas e Flows segmentados.</div></div></div>
+        </div>
+
+        <!-- BRIDGE -->
+        <div class="bridge">
+          <div class="flow">
+            <div class="proto">A2A</div>
+            <div class="arrows"><div class="arr-bi">◄────►</div><div class="arr-line"></div></div>
+          </div>
+          <div class="bridge-note">agentes conversam<br>com agentes</div>
+          <div class="flow">
+            <div class="proto mcp">MCP</div>
+            <div class="arrows"><div class="arr-line g"></div><div class="arr-bi g">◄────►</div></div>
+          </div>
+          <div class="bridge-note">contexto, dados<br>e ferramentas</div>
+        </div>
+
+        <!-- LÁ (MERCADO LIVRE) -->
+        <div class="side la">
+          <div class="side-head">
+            <div class="h">Sistemas & agentes do Mercado Livre</div>
+            <div class="where">Lá</div>
+          </div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de IA do Mercado Pago <span class="tag agent-y">agente</span></div><div class="nd">Já em produção (out/2025), base de 68M+ na América Latina.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Motor de recomendação <span class="tag system">sistema</span></div><div class="nd">Personalização sobre catálogo 1P + 3P; +10 anos de IA.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Antifraude & risco <span class="tag system">sistema</span></div><div class="nd">Modelos de fraude e crédito — núcleo de confiança do ML.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Catálogo & Mercado Envios <span class="tag system">sistema</span></div><div class="nd">Estoque, frete e logística — sistemas de registro.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">CRM, identidade & Mercado Ads <span class="tag system">sistema</span></div><div class="nd">Dados próprios, perfil do cliente e otimização de lances.</div></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- META FOOTER -->
+    <div class="meta-foot">
+      <div class="row"><span class="k">Construído em</span> Blip Studio · Multi-Agente · A2A · MCP</div>
+      <div class="row"><span class="k y">Princípio</span> Orquestrar, não substituir — a inteligência permanece no Mercado Livre</div>
+      <div class="row"><span class="k">Setas azuis</span> A2A: agentes Blip ⇄ agentes do Mercado Pago</div>
+      <div class="row"><span class="k y">Setas verdes</span> MCP: catálogo, perfil e ferramentas voltam como contexto</div>
+      <div class="row"><span class="k">Fontes</span> CNN Brasil · Mobile Time · Rel. de resultados ML 4T25 · Meta</div>
+      <div class="row"><span class="k y">Canal</span> WhatsApp como ponto de venda e relacionamento</div>
+    </div>
+  </section>
+
+  <div class="footer">Blip × Mercado Livre — visão de arquitetura preparada para a liderança de WhatsApp</div>
+</div>
+
+<script>
+  const tabs=document.querySelectorAll('.tab');
+  const panels=document.querySelectorAll('.panel');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+</script>
+</body>
+</html>
