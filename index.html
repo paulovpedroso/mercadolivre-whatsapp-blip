@@ -230,6 +230,116 @@
   .meta-foot .row .k.y{color:var(--meli)}
   .footer{padding:40px 0 70px;text-align:center;color:var(--mute);font-size:12px;font-family:var(--mono);letter-spacing:.5px}
 
+  /* ===== TAB ATIVAÇÃO ===== */
+  .at-hero{padding:74px 0 8px}
+  .at-hero h1{font-size:42px;font-weight:800;line-height:1.08;letter-spacing:-1.4px;max-width:24ch}
+  .at-hero p{margin-top:18px;color:var(--dim);font-weight:300;font-size:16px;max-width:72ch}
+  .at-note{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.4px}
+
+  .segs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+  .seg{padding:26px 24px;border-radius:18px;border:1px solid var(--line-soft);background:var(--surface);position:relative;overflow:hidden}
+  .seg::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--meli),transparent)}
+  .seg .pct{font-size:40px;font-weight:800;letter-spacing:-2px;color:var(--meli);line-height:1}
+  .seg .pct small{font-size:16px;font-weight:600;color:var(--dim);letter-spacing:0}
+  .seg h4{font-size:16px;font-weight:700;margin:12px 0 8px}
+  .seg p{font-size:13px;color:var(--dim);font-weight:300;line-height:1.5}
+
+  .journey{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:6px;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:var(--surface)}
+  .jstep{padding:24px 16px;border-right:1px solid var(--line-soft);position:relative}
+  .jstep:last-child{border-right:none}
+  .jstep .ji{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--blip),var(--blip-2));color:#04121f;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:14px}
+  .jstep:last-child .ji{background:linear-gradient(135deg,var(--meli),var(--meli-2))}
+  .jstep .jn{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--mute);margin-bottom:6px}
+  .jstep h5{font-size:14px;font-weight:700;line-height:1.18;margin-bottom:6px}
+  .jstep p{font-size:11.5px;color:var(--dim);font-weight:300;line-height:1.4}
+  .jstep .jarr{position:absolute;right:-9px;top:38px;z-index:3;width:18px;height:18px;border-radius:50%;background:var(--bg-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--blip)}
+  .jstep:last-child .jarr{display:none}
+
+  /* WhatsApp mockup */
+  .mock-wrap{display:grid;grid-template-columns:360px 1fr;gap:38px;align-items:start;margin-top:6px}
+  .phone{width:360px;border-radius:42px;padding:13px;background:linear-gradient(160deg,#1a2030,#0c1119);border:1px solid var(--line-soft);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.03)}
+  .phone-screen{border-radius:32px;overflow:hidden;background:#0B141A;position:relative;height:660px;display:flex;flex-direction:column}
+  .phone-screen::before{content:'';position:absolute;inset:0;opacity:.04;pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:18px 18px}
+  .wa-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#1F2C33;position:relative;z-index:2}
+  .wa-av{width:38px;height:38px;border-radius:50%;background:#FFE600;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#04121f}
+  .wa-id .wn{font-size:15px;font-weight:600;color:#E9EDEF;display:flex;align-items:center;gap:6px}
+  .wa-id .wn .vf{color:#0096FA;font-size:13px}
+  .wa-id .ws{font-size:11.5px;color:#8696A0}
+  .wa-body{flex:1;overflow-y:auto;padding:18px 14px 8px;display:flex;flex-direction:column;gap:9px;position:relative;z-index:1;scroll-behavior:smooth}
+  .wa-body::-webkit-scrollbar{width:0}
+  .wa-date{align-self:center;background:#182229;color:#8696A0;font-size:10.5px;padding:5px 12px;border-radius:8px;margin-bottom:4px}
+  .msg{max-width:80%;padding:8px 11px 7px;border-radius:10px;font-size:13.5px;line-height:1.42;color:#E9EDEF;position:relative;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s;display:none}
+  .msg.show{display:block;opacity:1;transform:none}
+  .msg.in{align-self:flex-start;background:#1F2C33;border-top-left-radius:3px}
+  .msg.out{align-self:flex-end;background:#005C4B;border-top-right-radius:3px}
+  .msg .tm{display:block;text-align:right;font-size:9.5px;color:#8696A0;margin-top:3px}
+  .msg.out .tm{color:#A7C9BE}
+  .qr{align-self:flex-start;display:flex;flex-direction:column;gap:6px;max-width:80%;width:80%}
+  .qr.show{display:flex}
+  .qr button{background:#1F2C33;color:#53BDEB;border:none;border-radius:9px;padding:11px;font-family:'Lexend',sans-serif;font-size:13px;font-weight:500;cursor:default;border-top:1px solid rgba(255,255,255,.05)}
+  .pcard,.paycard,.addrcard{max-width:84%;align-self:flex-start;background:#1F2C33;border-radius:10px;border-top-left-radius:3px;padding:10px;color:#E9EDEF}
+  .pcard .pimg{height:96px;border-radius:8px;background:linear-gradient(135deg,#2A3942,#0B141A);display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:9px}
+  .pcard .ptit{font-size:13px;font-weight:600}
+  .pcard .prow{display:flex;align-items:center;gap:8px;margin-top:5px}
+  .pcard .pprice{font-size:16px;font-weight:800;color:#fff}
+  .pcard .pfree{font-size:10.5px;color:#06C167;font-weight:600}
+  .pcard .pstars{font-size:10.5px;color:#FFE600}
+  .pcard .pbtn{margin-top:9px;text-align:center;background:#005C4B;border-radius:8px;padding:9px;font-size:12.5px;font-weight:600;color:#fff}
+  .addrcard .acrow{display:flex;align-items:center;gap:9px;font-size:12.5px}
+  .addrcard .aci{font-size:18px}
+  .addrcard .acbtn,.paycard .pcbtn{margin-top:9px;text-align:center;background:#0096FA;border-radius:8px;padding:9px;font-size:12.5px;font-weight:600;color:#fff}
+  .paycard .ptop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .paycard .plogo{font-size:12px;font-weight:700;color:#00B1EA}
+  .paycard .pval{font-size:20px;font-weight:800;color:#fff}
+  .paycard .pold{font-size:11px;color:#8696A0;text-decoration:line-through;margin-left:6px}
+  .paycard .pcoupon{font-size:10.5px;color:#FFE600;font-weight:600}
+  .paycard .pcbtn{background:#06C167;display:flex;align-items:center;justify-content:center;gap:7px}
+  .approved{align-self:center;background:rgba(6,193,103,.12);border:1px solid rgba(6,193,103,.35);color:#06C167;font-size:11.5px;font-weight:600;padding:7px 14px;border-radius:10px}
+
+  .mock-side{padding-top:4px}
+  .mock-controls{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .mock-btn{padding:11px 18px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-family:'Lexend',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s}
+  .mock-btn:hover{border-color:var(--blip);background:rgba(0,150,250,.08)}
+  .mock-btn.primary{background:linear-gradient(135deg,var(--blip),var(--blip-dim));border:none;color:#fff;box-shadow:0 6px 18px rgba(0,150,250,.3)}
+  .mock-btn:disabled{opacity:.35;cursor:not-allowed}
+  .mock-step{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.5px}
+  .mock-cap{padding:22px 24px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);margin-bottom:14px}
+  .mock-cap .mlbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blip);margin-bottom:8px}
+  .mock-cap h4{font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+  .mock-cap p{font-size:13.5px;color:var(--dim);font-weight:300;line-height:1.55}
+  .mock-dots{display:flex;gap:6px;margin-top:18px;flex-wrap:wrap}
+  .mock-dots .d{width:9px;height:9px;border-radius:50%;background:var(--line-soft);transition:.2s}
+  .mock-dots .d.on{background:var(--blip);box-shadow:0 0 8px var(--blip)}
+  .mock-dots .d.done{background:var(--blip-dim)}
+
+  /* ROI */
+  .roi{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+  .roicol{border-radius:18px;padding:26px 26px 24px;border:1px solid var(--line-soft);background:var(--surface)}
+  .roicol.win{border-color:var(--line);background:linear-gradient(160deg,rgba(0,150,250,.08),transparent)}
+  .roicol .rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .roicol .rh h4{font-size:17px;font-weight:700}
+  .roicol .rtag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:6px}
+  .roicol.lose .rtag{background:rgba(255,255,255,.06);color:var(--mute)}
+  .roicol.win .rtag{background:var(--line-meli);color:var(--meli)}
+  .roicol .rsub{font-size:12.5px;color:var(--dim);font-weight:300;margin-bottom:20px;min-height:34px}
+  .funnel{display:flex;flex-direction:column;gap:8px}
+  .frow{display:flex;align-items:center;gap:12px}
+  .frow .flab{width:120px;font-size:12px;color:var(--dim);font-weight:300;flex-shrink:0}
+  .frow .fbar{flex:1;height:26px;border-radius:7px;background:var(--bg-2);overflow:hidden;position:relative}
+  .frow .ffill{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:10px;font-size:11.5px;font-weight:700;color:#04121f}
+  .roicol.lose .ffill{background:linear-gradient(90deg,#5D6679,#3a4150);color:#E8EDF7}
+  .roicol.win .ffill{background:linear-gradient(90deg,var(--blip),var(--blip-2))}
+  .frow.final .ffill{background:linear-gradient(90deg,var(--meli-2),var(--meli));color:#04121f}
+  .roicol.lose .frow.final .ffill{background:linear-gradient(90deg,#4a4f5e,#5D6679);color:#E8EDF7}
+  .roi-foot{font-size:12.5px;color:var(--dim);font-weight:300;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+  .roi-foot b{color:var(--text);font-weight:600}
+  .bench{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap}
+  .bchip{flex:1;min-width:220px;padding:16px 18px;border-radius:14px;border:1px solid var(--line-soft);background:var(--bg-2)}
+  .bchip .bv{font-size:20px;font-weight:800;color:var(--blip);letter-spacing:-.5px}
+  .bchip .bt{font-size:12px;color:var(--dim);font-weight:300;margin-top:4px}
+  .bchip .bs{font-size:10px;color:var(--mute);font-family:var(--mono);margin-top:6px}
+  .disclaimer{margin-top:16px;font-size:11.5px;color:var(--mute);font-family:var(--mono);letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+
   /* ===== PASSWORD GATE ===== */
   #gate{display:none}
   body.locked{overflow:hidden;height:100vh}
@@ -288,6 +398,7 @@
       <button class="tab active" data-tab="visao">Visão</button>
       <button class="tab" data-tab="mp">Mercado Pago</button>
       <button class="tab" data-tab="casos">Casos de uso</button>
+      <button class="tab" data-tab="ativacao">Ativação</button>
       <button class="tab" data-tab="arch">Arquitetura</button>
     </div>
   </div>
@@ -336,14 +447,7 @@
   <section class="container mp-hero">
     <div class="eyebrow">O que já entregamos · e os próximos passos</div>
     <h1>A parceria com o Mercado Pago <span class="accent">já entrega — e tem muito a escalar.</span></h1>
-    <p>No Farming do Mercado Pago, a Blip já opera relacionamento consultivo, FAQ e notificações ativas em produção. A oportunidade está em conectar essas peças com dados, IA e cadência — elevando TPV, reduzindo churn e aumentando produtividade.</p>
-    <div class="mpctx">
-      <div class="mpc"><div class="v">US$ 4,0B</div><div class="d">Receita Fintech</div><div class="yoy">+51% YoY · Q1/26</div></div>
-      <div class="mpc"><div class="v">83 mi</div><div class="d">Fintech MAUs</div><div class="yoy">+29% YoY · Q1/26</div></div>
-      <div class="mpc"><div class="v">4,6 bi</div><div class="d">Transações</div><div class="yoy">+39% YoY · Q1/26</div></div>
-      <div class="mpc"><div class="v">~US$ 20B</div><div class="d">AUM</div><div class="yoy">+77% YoY · Q1/26</div></div>
-    </div>
-    <div class="src-line">Fontes públicas: release MercadoLibre Q1 2026 · Investor Relations.</div>
+    <p>No Farming do Mercado Pago, a Blip já opera relacionamento consultivo, FAQ e notificações ativas em produção. A oportunidade está em conectar essas peças com dados, IA e cadência — elevando engajamento, reduzindo churn e aumentando produtividade.</p>
   </section>
 
   <section class="container">
@@ -351,59 +455,41 @@
     <div class="prodgrid">
       <div class="prod">
         <div class="ph"><h3>Go Personal</h3><span class="tagx a">produto Blip · em produção</span></div>
-        <div class="pd">Atendimento consultivo individualizado no WhatsApp com governança, histórico, métricas e WABA dedicada — alternativa segura ao WhatsApp pessoal do consultor.</div>
-        <div class="mgrid">
-          <div class="metric"><div class="mv">62</div><div class="ml">números em uso</div><div class="mt">fluxos Farming</div></div>
-          <div class="metric"><div class="mv">139</div><div class="ml">templates ativos</div><div class="mt">36 temas</div></div>
-          <div class="metric"><div class="mv">77,1%</div><div class="ml">CSAT acumulado</div><div class="mt">meta 80%</div></div>
-          <div class="metric"><div class="mv">27%</div><div class="ml">taxa de resposta</div><div class="mt">+3% MoM</div></div>
-        </div>
+        <div class="pd">Atendimento consultivo individualizado no WhatsApp com governança, histórico e WABA dedicada — perfis verificados, voz única da marca e operação centralizada, como alternativa segura ao WhatsApp pessoal do consultor.</div>
       </div>
       <div class="prod">
         <div class="ph"><h3>Bot Farming</h3><span class="tagx a">FAQ Studio · em produção</span></div>
         <div class="pd">FAQ no Studio para Consultor Certificado e Farming Remoto, gerando engajamento e deflection — com espaço para evoluir a jornadas proativas conectadas a objetivos de negócio.</div>
-        <div class="mgrid">
-          <div class="metric"><div class="mv">1.425</div><div class="ml">exibições FAQ</div><div class="mt">abr/26</div></div>
-          <div class="metric"><div class="mv">71%</div><div class="ml">engajamento FAQ</div><div class="mt">abr/26</div></div>
-          <div class="metric"><div class="mv">75%</div><div class="ml">taxa de resposta</div><div class="mt">abr/26</div></div>
-          <div class="metric"><div class="mv">67,4%</div><div class="ml">CSAT Consultor Cert.</div><div class="mt">abr/26</div></div>
-        </div>
       </div>
     </div>
 
-    <div class="subhead">O modelo comercial que sustenta a operação · FAST</div>
+    <div class="subhead">O modelo que sustenta a operação · FAST</div>
     <div class="fast">
-      <div class="fstep"><div class="fl">ETAPA 1</div><div class="fbig"><div class="fc">S</div><div class="fn">Score</div></div><div class="fd">Prioriza sellers por sinais de negócio e potencial (1 a 5).</div></div>
-      <div class="fstep"><div class="fl">ETAPA 2</div><div class="fbig"><div class="fc">A</div><div class="fn">Agenda</div></div><div class="fd">Define cadência, objetivo e janela de contato do consultor.</div></div>
+      <div class="fstep"><div class="fl">ETAPA 1</div><div class="fbig"><div class="fc">S</div><div class="fn">Score</div></div><div class="fd">Prioriza por sinais de negócio e potencial de ação.</div></div>
+      <div class="fstep"><div class="fl">ETAPA 2</div><div class="fbig"><div class="fc">A</div><div class="fn">Agenda</div></div><div class="fd">Define cadência, objetivo e janela de contato.</div></div>
       <div class="fstep"><div class="fl">ETAPA 3</div><div class="fbig"><div class="fc">T</div><div class="fn">Tarefa</div></div><div class="fd">Transforma intenção comercial em atividade executável.</div></div>
       <div class="fstep"><div class="fl">ETAPA 4</div><div class="fbig"><div class="fc">T</div><div class="fn">Tag · Alarme</div></div><div class="fd">Registra contexto e dispara gatilhos de follow-up.</div></div>
     </div>
 
-    <div class="subhead">Metodologia de growth comprovada · Mesa de Performance</div>
+    <div class="subhead">Metodologia de growth · Mesa de Performance</div>
     <div class="mesa">
-      <div class="mh"><h3>Disciplina de growth aplicada à plataforma</h3><span class="tagx h">resultado real · outra conta estratégica</span></div>
-      <div class="msub">Hipóteses, micro-segmentação A/B/C/D e ciclos 80/20 com ritual semanal. Resultado em 1 mês completo de mesa (Mar/26), em outra conta estratégica:</div>
-      <div class="mesa-stats">
-        <div class="ms"><div class="v">R$ 11,3 MM</div><div class="l">produção geral</div><div class="top">Top #2 · últimos 6 meses</div></div>
-        <div class="ms"><div class="v">R$ 4,9 MM</div><div class="l">produção via N.A.</div><div class="top">Top #1 · últimos 6 meses</div></div>
-        <div class="ms"><div class="v">R$ 0,019</div><div class="l">CAC com &gt;R$70K</div><div class="top">Top #1 · série histórica</div></div>
-        <div class="ms"><div class="v">R$ 27,61</div><div class="l">custo N.A. / acordo</div><div class="top">Top #1 · últimos 6 meses</div></div>
-      </div>
-      <div class="mesa-learn"><b>Aprendizados:</b> segmentação certa rende +10 p.p. acima da média · gatilho de fraseologia +6 p.p. · reengajamento low-cost cortou CAC em 23%.</div>
+      <div class="mh"><h3>Disciplina de growth aplicada à plataforma</h3><span class="tagx h">metodologia</span></div>
+      <div class="msub">Estudo profundo de público, micro-segmentação A/B/C/D com relevância estatística, ciclo 80/20 (sustentar resultado sem parar de aprender) e ritual semanal com feedback loop contínuo.</div>
+      <div class="mesa-learn"><b>Alavancas recorrentes:</b> segmentação certa, gatilhos de fraseologia e reengajamento low-cost — testados, medidos e evoluídos em cadência.</div>
     </div>
 
     <div class="subhead">Próximos passos por lá · 7 territórios de oportunidade</div>
     <div class="pilares">
-      <div class="pil"><div class="pn">P1</div><h5>Ativação do não-carteirizado</h5><p>Ativar LT órfão com escala e baixo custo por seller.</p></div>
-      <div class="pil"><div class="pn">P2</div><h5>Engajamento carteirizado</h5><p>Tornar cada consultor mais produtivo.</p></div>
-      <div class="pil"><div class="pn">P3</div><h5>Reativação de churn</h5><p>Detectar e reverter queda de TPV antes do churn.</p></div>
-      <div class="pil"><div class="pn">P4</div><h5>Cross-sell & upsell</h5><p>Expandir receita por seller no ecossistema.</p></div>
+      <div class="pil"><div class="pn">P1</div><h5>Ativação digital de base não-coberta</h5><p>Ativar com escala e baixo custo por contato.</p></div>
+      <div class="pil"><div class="pn">P2</div><h5>Engajamento da carteira</h5><p>Tornar cada consultor mais produtivo.</p></div>
+      <div class="pil"><div class="pn">P3</div><h5>Reativação de churn</h5><p>Detectar e reverter queda de uso antes do churn.</p></div>
+      <div class="pil"><div class="pn">P4</div><h5>Cross-sell & upsell</h5><p>Expandir receita no ecossistema.</p></div>
       <div class="pil"><div class="pn">P5</div><h5>Performance de N.A.</h5><p>Elevar engajamento e reduzir falhas de notificação.</p></div>
       <div class="pil"><div class="pn">P6</div><h5>Atendimento & CSAT</h5><p>Reduzir espera, abandono e fricção.</p></div>
       <div class="pil"><div class="pn">P7</div><h5>Dados, governança & IA</h5><p>Converter comportamento em ações automáticas.</p></div>
       <div class="pil" style="background:linear-gradient(160deg,rgba(255,230,0,.06),transparent);border-color:var(--line-meli)"><div class="pn">→</div><h5>Princípio</h5><p>Ganham força iniciativas que cruzam 2+ pilares com dados/IA como alavanca.</p></div>
     </div>
-    <div class="src-line" style="margin-bottom:50px">Fontes internas: Pré-reading Workshop Farming (Maio/2026) · dashboards Go Personal e Bot Farming (mar–abr/2026) · Mesa de Performance.</div>
+    <div class="src-line" style="margin-bottom:50px">Fonte: Pré-reading do Workshop Blip × Mercado Pago — Farming (Maio/2026). Material qualitativo, sem dados operacionais.</div>
   </section>
 </div>
 
@@ -422,7 +508,7 @@
         <h3>Ativação & "Never Buyers"</h3>
         <div class="one">Transformar a base que nunca comprou em primeira venda.</div>
         <div class="desc">Jornadas conversacionais para novos usuários, reativação e incentivo à primeira compra. A maior parte da base não abre o app com frequência — o WhatsApp passa a ser o canal estratégico para alcançá-la e gerar venda incremental.</div>
-        <div class="foot"><span class="tagx y">Vendas incrementais</span><span class="tagx s">Marketing · Aquisição</span></div>
+        <div class="foot"><span class="tagx y">Vendas incrementais</span><span class="tagx s">Marketing · Aquisição</span><span class="tagx a" style="cursor:pointer" onclick="document.querySelector('[data-tab=ativacao]').click()">Ver detalhe →</span></div>
       </div>
       <div class="uc prio">
         <div class="uc-top"><span class="uc-num">CASO 02</span><span class="uc-badge now">Prioridade</span></div>
@@ -468,6 +554,146 @@
         <div class="ref"><div class="who">Fintech · vizinho do Pago</div><div class="big b">+R$2bi</div><div class="t">A Magie movimentou mais de R$2bi como "assistente que conecta" — não compete com bancos, orquestra. Espelha a tese híbrida.</div><div class="src">Fontes: Startups, Exame — 2025/26</div></div>
       </div>
     </div>
+  </section>
+</div>
+
+<!-- ============ TAB ATIVAÇÃO ============ -->
+<div class="panel" id="panel-ativacao">
+  <section class="container at-hero">
+    <div class="eyebrow">Caso em foco · Ativação de Novo Usuário</div>
+    <h1>Da primeira mensagem à primeira compra — <span class="accent">sem sair do WhatsApp.</span></h1>
+    <p>O detalhamento do Caso 01. Em vez de uma notificação que só avisa, uma jornada conversacional que conduz o novo usuário do Mercado Livre até a primeira compra — descoberta, oferta e pagamento no mesmo fluxo.</p>
+    <div class="at-note">Segmentação levantada na conversa com o time de WhatsApp do Mercado Livre.</div>
+  </section>
+
+  <section class="container">
+    <div class="subhead">A oportunidade · quem ativar primeiro</div>
+    <div class="segs">
+      <div class="seg">
+        <div class="pct">~70<small>%</small></div>
+        <h4>Base sem o app ativo</h4>
+        <p>Boa parte da base não usa o aplicativo com recorrência. Para esse público, o WhatsApp é o canal estratégico — muitas vezes o único com alcance real e recorrente.</p>
+      </div>
+      <div class="seg">
+        <div class="pct">Novos</div>
+        <h4>Usuários em onboarding</h4>
+        <p>Criaram a conta recentemente, mas ainda não compraram. A janela de ativação é curta — o primeiro empurrão certo define o hábito.</p>
+      </div>
+      <div class="seg">
+        <div class="pct">0 compras</div>
+        <h4>"Never Buyers"</h4>
+        <p>Cadastrados há mais tempo que nunca converteram. Reengajamento conversacional com oferta de primeira compra para destravar a barreira inicial.</p>
+      </div>
+    </div>
+
+    <div class="subhead">A jornada · primeira mensagem → primeira compra</div>
+    <div class="journey">
+      <div class="jstep"><div class="ji">1</div><div class="jn">DISPARO</div><h5>Boas-vindas ativa</h5><p>Template proativo a quem criou conta e não comprou.</p><div class="jarr">›</div></div>
+      <div class="jstep"><div class="ji">2</div><div class="jn">ENGAJAMENTO</div><h5>Resposta em 1 toque</h5><p>Botões rápidos, sem digitar — entra na conversa.</p><div class="jarr">›</div></div>
+      <div class="jstep"><div class="ji">3</div><div class="jn">DESCOBERTA</div><h5>Recomendação 1:1</h5><p>Ofertas pelo perfil e buscas, não catálogo genérico.</p><div class="jarr">›</div></div>
+      <div class="jstep"><div class="ji">4</div><div class="jn">OFERTA</div><h5>Cupom 1ª compra</h5><p>Incentivo certo no momento de maior intenção.</p><div class="jarr">›</div></div>
+      <div class="jstep"><div class="ji">5</div><div class="jn">CHECKOUT</div><h5>Mercado Pago no chat</h5><p>Endereço via Flows e Pix sem sair da conversa.</p><div class="jarr">›</div></div>
+      <div class="jstep"><div class="ji">★</div><div class="jn">CONVERSÃO</div><h5>Primeira compra</h5><p>Never Buyer convertido — e pronto para a próxima.</p></div>
+    </div>
+
+    <div class="subhead">Simulação navegável · veja a conversa acontecer</div>
+    <div class="mock-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-av">b</div>
+            <div class="wa-id"><div class="wn">Mercado Livre <span class="vf">✔</span></div><div class="ws">online · conta oficial</div></div>
+          </div>
+          <div class="wa-body" id="waBody">
+            <div class="wa-date" data-step="1">HOJE</div>
+            <div class="msg in" data-step="1">Oi, Paulo! 👋 Vi que você criou sua conta no Mercado Livre, mas ainda não fez a primeira compra. Posso te ajudar a achar algo bom hoje? 🛒<span class="tm">09:41</span></div>
+            <div class="qr" data-step="1">
+              <button>Quero ver ofertas 👀</button>
+              <button>Tô só olhando</button>
+            </div>
+            <div class="msg out" data-step="2">Quero ver ofertas 👀<span class="tm">09:41</span></div>
+            <div class="msg in" data-step="3">Perfeito! Separei ofertas com <b>frete grátis</b> que combinam com o que você andou pesquisando 👇<span class="tm">09:41</span></div>
+            <div class="pcard" data-step="3">
+              <div class="pimg">🎧</div>
+              <div class="ptit">Fone Bluetooth XR · Cancelamento de ruído</div>
+              <div class="prow"><span class="pprice">R$ 149,90</span><span class="pstars">★ 4.8</span></div>
+              <div class="prow"><span class="pfree">✓ Frete grátis · chega quinta</span></div>
+              <div class="pbtn">Comprar agora</div>
+            </div>
+            <div class="msg out" data-step="4">Comprar agora 🙌<span class="tm">09:42</span></div>
+            <div class="msg in" data-step="5">Ótima escolha! 🎉 Como é sua <b>primeira compra</b>, liberei <b>R$ 20 OFF</b>. Dá pra finalizar por aqui mesmo, sem baixar o app.<span class="tm">09:42</span></div>
+            <div class="qr" data-step="5">
+              <button>Finalizar no chat ✅</button>
+              <button>Ver no app</button>
+            </div>
+            <div class="msg out" data-step="6">Finalizar no chat ✅<span class="tm">09:42</span></div>
+            <div class="addrcard" data-step="6">
+              <div class="acrow"><span class="aci">📍</span><span>Confirme a entrega:<br><b>R. dos Pinheiros, 1200 · São Paulo/SP</b></span></div>
+              <div class="acbtn">Confirmar endereço</div>
+            </div>
+            <div class="paycard" data-step="7">
+              <div class="ptop"><span class="plogo">Mercado Pago</span><span class="pcoupon">−R$ 20 cupom</span></div>
+              <div><span class="pval">R$ 129,90</span><span class="pold">R$ 149,90</span></div>
+              <div class="pcbtn">⚡ Pagar com Pix</div>
+            </div>
+            <div class="msg out" data-step="8">Pagar com Pix<span class="tm">09:43</span></div>
+            <div class="approved" data-step="8">✅ Pagamento aprovado via Pix</div>
+            <div class="msg in" data-step="8">Pedido <b>#ML-4821</b> confirmado! Chega <b>quinta-feira</b> 🚚 Obrigado pela primeira compra 💛 Quer acompanhar a entrega por aqui?<span class="tm">09:43</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-side">
+        <div class="mock-controls">
+          <button class="mock-btn" id="mPrev">‹ Anterior</button>
+          <button class="mock-btn primary" id="mNext">Próximo ›</button>
+          <span class="mock-step" id="mStep">Passo 1 de 8</span>
+        </div>
+        <div class="mock-cap" id="mCap"></div>
+        <div class="mock-cap" style="background:var(--bg-2)">
+          <div class="mlbl">Por que funciona</div>
+          <p>Cada etapa elimina uma fricção que mata a conversão na notificação tradicional: troca de canal, dependência do app e formulário web. Aqui, descoberta, oferta e pagamento vivem no mesmo fio de conversa.</p>
+        </div>
+        <div class="mock-dots" id="mDots"></div>
+        <button class="mock-btn" id="mReset" style="margin-top:18px">↻ Reiniciar simulação</button>
+      </div>
+    </div>
+
+    <div class="subhead">ROI esperado · jornada conversacional vs. notificação pura</div>
+    <div class="roi">
+      <div class="roicol lose">
+        <div class="rh"><h4>Notificação pura</h4><span class="rtag">modelo tradicional</span></div>
+        <div class="rsub">Push / SMS / e-mail que só avisa — e depende do usuário abrir o app para agir.</div>
+        <div class="funnel">
+          <div class="frow"><span class="flab">Disparo <b style="color:#fff">100%</b></span><div class="fbar"><div class="ffill" style="width:100%"></div></div></div>
+          <div class="frow"><span class="flab">Abertura <b style="color:#fff">~22%</b></span><div class="fbar"><div class="ffill" style="width:22%"></div></div></div>
+          <div class="frow"><span class="flab">Clique <b style="color:#fff">~6%</b></span><div class="fbar"><div class="ffill" style="width:8%"></div></div></div>
+          <div class="frow"><span class="flab">Abre o app <b style="color:#fff">~4%</b></span><div class="fbar"><div class="ffill" style="width:6%"></div></div></div>
+          <div class="frow final"><span class="flab">Compra <b style="color:#fff">~1%</b></span><div class="fbar"><div class="ffill" style="width:4%"></div></div></div>
+        </div>
+        <div class="roi-foot"><b>Onde perde:</b> cada salto de canal — abrir, clicar, instalar o app — derruba a conversão. Pior ainda para quem não usa o app.</div>
+      </div>
+
+      <div class="roicol win">
+        <div class="rh"><h4>Jornada conversacional</h4><span class="rtag">proposta Blip</span></div>
+        <div class="rsub">A conversa leva da mensagem à compra no próprio WhatsApp — sem trocar de canal.</div>
+        <div class="funnel">
+          <div class="frow"><span class="flab">Disparo <b style="color:#fff">100%</b></span><div class="fbar"><div class="ffill" style="width:100%"></div></div></div>
+          <div class="frow"><span class="flab">Abertura <b style="color:#fff">~98%</b></span><div class="fbar"><div class="ffill" style="width:98%"></div></div></div>
+          <div class="frow"><span class="flab">Resposta <b style="color:#fff">~45%</b></span><div class="fbar"><div class="ffill" style="width:45%"></div></div></div>
+          <div class="frow"><span class="flab">Avança no chat <b style="color:#fff">~30%</b></span><div class="fbar"><div class="ffill" style="width:30%"></div></div></div>
+          <div class="frow final"><span class="flab">Compra <b style="color:#04121f">~12%</b></span><div class="fbar"><div class="ffill" style="width:14%"></div></div></div>
+        </div>
+        <div class="roi-foot"><b>Por que converte mais:</b> sem troca de canal, sem depender do app, com oferta e pagamento no mesmo fluxo — ordem de grandeza acima da notificação pura.</div>
+      </div>
+    </div>
+
+    <div class="bench">
+      <div class="bchip"><div class="bv">~98%</div><div class="bt">abertura de mensagens no WhatsApp (vs. ~21% no e-mail)</div><div class="bs">Fonte: benchmarks de mercado</div></div>
+      <div class="bchip"><div class="bv">72%</div><div class="bt">conclusão em WhatsApp Flows (vs. 35% em formulário web)</div><div class="bs">Fonte: Meta / mercado</div></div>
+      <div class="bchip"><div class="bv">76%</div><div class="bt">dos brasileiros já compraram pelo WhatsApp</div><div class="bs">Fonte: Opinion Box</div></div>
+    </div>
+    <div class="disclaimer" style="margin-bottom:54px">⚠ Os funis acima são <b style="color:var(--dim);font-weight:600">&nbsp;projeção ilustrativa&nbsp;</b> para alinhar expectativa — a validar em teste A/B controlado (notificação pura vs. jornada conversacional). Benchmarks ao lado são dados públicos de mercado.</div>
   </section>
 </div>
 
@@ -596,6 +822,43 @@
     document.getElementById('panel-'+t.dataset.tab).classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   }));
+
+  /* ===== WhatsApp mockup navigation ===== */
+  const MOCK_MAX=8;
+  const mCaps=[
+    ['Disparo ativo (template)','Mensagem proativa de boas-vindas a quem criou conta mas nunca comprou. É aberta porque é WhatsApp — não um e-mail ignorado.'],
+    ['Engajamento em 1 toque','Um botão, sem digitar. O usuário entra na conversa em segundos.'],
+    ['Descoberta personalizada','Recomendação baseada em perfil e buscas — não um catálogo genérico.'],
+    ['Intenção de compra','O interesse vira ação dentro do próprio chat, sem trocar de tela.'],
+    ['Oferta de 1ª compra','O incentivo certo na hora certa: cupom de ativação e a promessa de não precisar do app.'],
+    ['Checkout sem fricção','Endereço confirmado em um toque via WhatsApp Flows — zero formulário web.'],
+    ['Pagamento nativo','Mercado Pago dentro da conversa: Pix em segundos, com o cupom já aplicado.'],
+    ['Primeira compra concluída 🎉','Never Buyer convertido sem sair do canal — e já engajado para a próxima compra.']
+  ];
+  let mCur=1;
+  const waBody=document.getElementById('waBody');
+  const mStepEl=document.getElementById('mStep');
+  const mCapEl=document.getElementById('mCap');
+  const mDotsEl=document.getElementById('mDots');
+  const mPrev=document.getElementById('mPrev');
+  const mNext=document.getElementById('mNext');
+  const mReset=document.getElementById('mReset');
+  if(mDotsEl){for(let i=1;i<=MOCK_MAX;i++){const d=document.createElement('span');d.className='d';mDotsEl.appendChild(d);}}
+  function renderMock(){
+    document.querySelectorAll('#waBody [data-step]').forEach(el=>{
+      el.classList.toggle('show', parseInt(el.dataset.step)<=mCur);
+    });
+    if(mStepEl)mStepEl.textContent='Passo '+mCur+' de '+MOCK_MAX;
+    if(mCapEl)mCapEl.innerHTML='<div class="mlbl">Etapa '+mCur+'</div><h4>'+mCaps[mCur-1][0]+'</h4><p>'+mCaps[mCur-1][1]+'</p>';
+    if(mDotsEl)[...mDotsEl.children].forEach((d,i)=>{d.className='d'+(i+1<mCur?' done':'')+(i+1===mCur?' on':'');});
+    if(mPrev)mPrev.disabled=mCur===1;
+    if(mNext)mNext.disabled=mCur===MOCK_MAX;
+    if(waBody)setTimeout(()=>waBody.scrollTo({top:waBody.scrollHeight,behavior:'smooth'}),80);
+  }
+  if(mNext)mNext.addEventListener('click',()=>{if(mCur<MOCK_MAX){mCur++;renderMock();}});
+  if(mPrev)mPrev.addEventListener('click',()=>{if(mCur>1){mCur--;renderMock();}});
+  if(mReset)mReset.addEventListener('click',()=>{mCur=1;renderMock();});
+  renderMock();
 </script>
 </body>
 </html>
