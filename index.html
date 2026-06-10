@@ -3,169 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1280">
-<title>Mercado Livre × Blip — Visão & Arquitetura de Orquestração</title>
+<title>Blip × Mercado Livre — Parceria, Mercado Pago, Casos de Uso & Arquitetura</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
-    --blip:#0096FA;
-    --blip-2:#00C2FF;
-    --blip-dim:#0078C8;
-    --meli:#FFE600;
-    --meli-2:#FFD100;
-    --bg:#05080F;
-    --bg-2:#0A0F1C;
-    --surface:#11182B;
-    --surface-2:#161E36;
-    --line:rgba(0,150,250,.18);
-    --line-soft:rgba(255,255,255,.06);
-    --line-meli:rgba(255,230,0,.22);
-    --text:#E8EDF7;
-    --dim:#8893A8;
-    --mute:#5D6679;
-    --green:#25D366;
+    --blip:#0096FA;--blip-2:#00C2FF;--blip-dim:#0078C8;
+    --meli:#FFE600;--meli-2:#FFD100;
+    --bg:#05080F;--bg-2:#0A0F1C;--surface:#11182B;--surface-2:#161E36;
+    --line:rgba(0,150,250,.18);--line-soft:rgba(255,255,255,.06);--line-meli:rgba(255,230,0,.22);
+    --text:#E8EDF7;--dim:#8893A8;--mute:#5D6679;--green:#25D366;
     --mono:'JetBrains Mono',monospace;
   }
-  html,body{
-    background:var(--bg);color:var(--text);
-    font-family:'Lexend',system-ui,sans-serif;font-weight:400;line-height:1.55;
-    -webkit-font-smoothing:antialiased;min-width:1280px;
-  }
-  body{
-    background:
-      radial-gradient(1100px 700px at 80% -100px, rgba(0,150,250,.10), transparent 70%),
-      radial-gradient(900px 500px at -100px 700px, rgba(255,230,0,.05), transparent 70%),
-      var(--bg);
-  }
+  html,body{background:var(--bg);color:var(--text);font-family:'Lexend',system-ui,sans-serif;font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased;min-width:1280px}
+  body{background:radial-gradient(1100px 700px at 80% -100px,rgba(0,150,250,.10),transparent 70%),radial-gradient(900px 500px at -100px 760px,rgba(255,230,0,.045),transparent 70%),var(--bg)}
   .container{max-width:1440px;margin:0 auto;padding:0 48px}
 
-  /* ===== TOPBAR / TABS ===== */
+  /* TOPBAR */
   .topbar{position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);background:rgba(5,8,15,.85);border-bottom:1px solid var(--line-soft)}
   .topbar-inner{max-width:1440px;margin:0 auto;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px}
   .brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:15px;letter-spacing:-.2px}
   .brand-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#04121f;box-shadow:0 4px 20px rgba(0,150,250,.4)}
-  .brand .x{color:var(--mute);font-weight:300;margin:0 2px}
-  .brand .m{color:var(--meli)}
+  .brand .x{color:var(--mute);font-weight:300;margin:0 2px}.brand .m{color:var(--meli)}
   .tabs{display:flex;gap:6px;background:var(--surface);padding:5px;border-radius:12px;border:1px solid var(--line-soft)}
-  .tab{padding:9px 20px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--dim);cursor:pointer;border:none;background:transparent;font-family:inherit;transition:.25s;letter-spacing:.2px}
+  .tab{padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--dim);cursor:pointer;border:none;background:transparent;font-family:inherit;transition:.25s;letter-spacing:.2px}
   .tab:hover{color:var(--text)}
   .tab.active{background:linear-gradient(135deg,var(--blip),var(--blip-dim));color:#fff;box-shadow:0 4px 16px rgba(0,150,250,.35)}
 
-  .panel{display:none;animation:fade .5s ease}
-  .panel.active{display:block}
+  .panel{display:none;animation:fade .5s ease}.panel.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  /* ===== shared bits ===== */
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--blip);font-weight:500;margin-bottom:18px}
   .accent{background:linear-gradient(100deg,var(--blip),var(--blip-2) 55%,var(--meli));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .tag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:500}
-  .tag.agent{background:rgba(0,150,250,.14);color:var(--blip)}
-  .tag.system{background:rgba(255,255,255,.06);color:var(--dim)}
-  .tag.agent-y{background:var(--line-meli);color:var(--meli)}
+  .tagx{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:500}
+  .tagx.a{background:rgba(0,150,250,.14);color:var(--blip)}.tagx.s{background:rgba(255,255,255,.06);color:var(--dim)}.tagx.y{background:var(--line-meli);color:var(--meli)}.tagx.h{background:rgba(37,211,102,.14);color:var(--green)}
+  .section-title{padding:34px 0 10px}
+  .section-title h2{font-size:28px;font-weight:700;letter-spacing:-.7px;margin-bottom:12px}
+  .section-title p{color:var(--dim);font-weight:300;font-size:15px;max-width:92ch}
+  .subhead{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin:38px 0 18px;display:flex;align-items:center;gap:14px}
+  .subhead::after{content:'';flex:1;height:1px;background:var(--line-soft)}
 
-  /* ===== TAB 1 — INTRO ===== */
-  .intro-hero{padding:120px 0 80px}
-  .intro-hero .kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:100px;border:1px solid var(--line);background:rgba(0,150,250,.05);font-size:12.5px;color:var(--dim);margin-bottom:34px;font-family:var(--mono);letter-spacing:.5px}
-  .intro-hero .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.2s infinite}
+  /* ===== TAB 1 — VISÃO ===== */
+  .hero{padding:104px 0 64px}
+  .kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:100px;border:1px solid var(--line);background:rgba(0,150,250,.05);font-size:12.5px;color:var(--dim);margin-bottom:32px;font-family:var(--mono);letter-spacing:.4px}
+  .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 9px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
-  .intro-hero h1{font-size:64px;font-weight:800;line-height:1.04;letter-spacing:-2px;max-width:18ch}
-  .intro-hero .lead{margin-top:28px;font-size:20px;color:var(--dim);font-weight:300;max-width:62ch}
-  .intro-hero .lead strong{color:var(--text);font-weight:500}
-
-  .intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:64px}
-  .istat{padding:30px 26px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);position:relative;overflow:hidden}
+  .hero h1{font-size:60px;font-weight:800;line-height:1.04;letter-spacing:-2px;max-width:20ch}
+  .hero .lead{margin-top:26px;font-size:20px;color:var(--dim);font-weight:300;max-width:64ch}
+  .hero .lead strong{color:var(--text);font-weight:500}
+  .istats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+  .istat{padding:28px 24px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);position:relative;overflow:hidden}
   .istat::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--blip),transparent)}
-  .istat .n{font-size:38px;font-weight:800;letter-spacing:-1.5px;line-height:1;background:linear-gradient(120deg,#fff,var(--blip));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .istat .l{margin-top:12px;font-size:13.5px;color:var(--dim);font-weight:300}
+  .istat .n{font-size:36px;font-weight:800;letter-spacing:-1.5px;line-height:1;background:linear-gradient(120deg,#fff,var(--blip));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .istat .l{margin-top:11px;font-size:13px;color:var(--dim);font-weight:300}
+  .band{margin-top:24px;padding:28px 32px;border-radius:18px;border:1px solid var(--line-meli);background:linear-gradient(135deg,rgba(255,230,0,.05),rgba(0,150,250,.04));display:flex;align-items:center;gap:22px}
+  .band .icon{font-size:24px}
+  .band .txt h3{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:5px}
+  .band .txt p{color:var(--dim);font-weight:300;font-size:14px;max-width:96ch}.band .txt p b{color:var(--text);font-weight:600}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
+  .col{padding:30px 28px;border-radius:18px;border:1px solid var(--line-soft);background:var(--surface)}
+  .col h4{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .col h4 .dotc{width:9px;height:9px;border-radius:50%}
+  .col.moment h4 .dotc{background:var(--meli);box-shadow:0 0 10px var(--meli)}.col.why h4 .dotc{background:var(--blip);box-shadow:0 0 10px var(--blip)}
+  .li{display:flex;gap:12px;margin-bottom:13px;font-size:13.5px;color:var(--dim);font-weight:300;line-height:1.5}
+  .li:last-child{margin-bottom:0}
+  .li .mk{flex-shrink:0;margin-top:1px;font-family:var(--mono);font-size:11px;color:var(--blip);font-weight:600}
+  .col.moment .li .mk{color:var(--meli)}.li b{color:var(--text);font-weight:600}
+  .backers{margin-top:42px;display:flex;align-items:center;gap:16px;color:var(--mute);font-size:13px;font-family:var(--mono);letter-spacing:.5px;flex-wrap:wrap}
+  .backers span{color:var(--dim)}.backers .sep{color:var(--line)}
 
-  .intro-band{margin-top:70px;padding:44px 46px;border-radius:20px;border:1px solid var(--line-meli);background:linear-gradient(135deg,rgba(255,230,0,.05),rgba(0,150,250,.04));display:flex;align-items:center;gap:30px}
-  .intro-band .icon{font-size:30px}
-  .intro-band .txt h3{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px}
-  .intro-band .txt p{color:var(--dim);font-weight:300;font-size:15.5px;max-width:80ch}
-  .intro-band .txt p b{color:var(--text);font-weight:600}
+  /* ===== TAB 2 — MERCADO PAGO ===== */
+  .mp-hero{padding:74px 0 6px}
+  .mp-hero h1{font-size:42px;font-weight:800;line-height:1.08;letter-spacing:-1.4px;max-width:22ch}
+  .mp-hero p{margin-top:18px;color:var(--dim);font-weight:300;font-size:16px;max-width:72ch}
+  .mpctx{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+  .mpc{padding:22px 20px;border-radius:14px;border:1px solid var(--line-soft);background:var(--bg-2)}
+  .mpc .v{font-size:27px;font-weight:800;letter-spacing:-1px;color:var(--meli)}
+  .mpc .d{font-size:12.5px;color:var(--text);font-weight:500;margin-top:6px}
+  .mpc .yoy{font-size:11px;color:var(--green);font-family:var(--mono);margin-top:4px}
+  .src-line{margin-top:12px;font-size:11px;color:var(--mute);font-family:var(--mono)}
 
-  .backers{margin-top:48px;display:flex;align-items:center;gap:18px;color:var(--mute);font-size:13px;font-family:var(--mono);letter-spacing:.5px;flex-wrap:wrap}
-  .backers span{color:var(--dim)}
-  .backers .sep{color:var(--line)}
+  .prodgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .prod{border:1px solid var(--line-soft);border-radius:20px;background:var(--surface);padding:28px 28px 24px;position:relative;overflow:hidden}
+  .prod::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--blip),transparent)}
+  .prod .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .prod h3{font-size:20px;font-weight:700;letter-spacing:-.4px}
+  .prod .pd{font-size:13.5px;color:var(--dim);font-weight:300;margin-bottom:18px}
+  .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .metric{padding:14px 16px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line-soft)}
+  .metric .mv{font-size:23px;font-weight:800;letter-spacing:-.8px;color:var(--blip)}
+  .metric .ml{font-size:11.5px;color:var(--dim);font-weight:300;margin-top:3px}
+  .metric .mt{font-size:10px;color:var(--mute);font-family:var(--mono);margin-top:3px}
 
-  /* ===== TAB 2 — ARCHITECTURE ===== */
-  .arch-hero{padding:80px 0 40px}
-  .hero-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:60px;align-items:start}
-  .hero-grid h1{font-size:44px;font-weight:800;line-height:1.08;letter-spacing:-1.4px}
-  .hero-grid p{margin-top:22px;color:var(--dim);font-weight:300;font-size:16px;max-width:60ch}
-  .hero-meta{border-left:1px solid var(--line-soft);padding-left:30px;display:flex;flex-direction:column;gap:22px}
+  .fast{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:6px;border:1px solid var(--line-soft);border-radius:16px;overflow:hidden;background:var(--surface)}
+  .fstep{padding:22px 20px;border-right:1px dashed var(--line-soft);position:relative}
+  .fstep:last-child{border-right:none}
+  .fstep .fl{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:1px;margin-bottom:8px}
+  .fstep .fbig{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .fstep .fc{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--blip),var(--blip-2));color:#04121f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .fstep .fn{font-size:15px;font-weight:700}
+  .fstep .fd{font-size:12px;color:var(--dim);font-weight:300}
+
+  .mesa{margin-top:6px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(0,150,250,.08),transparent);padding:30px 32px}
+  .mesa .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .mesa .mh h3{font-size:19px;font-weight:700}
+  .mesa .msub{font-size:13px;color:var(--dim);font-weight:300;margin-bottom:20px;max-width:84ch}
+  .mesa-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .ms{padding:0 16px;border-left:2px solid var(--blip)}
+  .ms .v{font-size:25px;font-weight:800;letter-spacing:-1px;color:#fff}
+  .ms .l{font-size:12px;color:var(--dim);font-weight:300;margin-top:4px}
+  .ms .top{font-size:10.5px;color:var(--meli);font-family:var(--mono);margin-top:5px}
+  .mesa-learn{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--dim);font-weight:300}
+  .mesa-learn b{color:var(--text);font-weight:600}
+
+  .pilares{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .pil{padding:20px 18px;border-radius:14px;border:1px solid var(--line-soft);background:var(--surface);transition:transform .25s,border-color .25s}
+  .pil:hover{transform:translateY(-4px);border-color:var(--line)}
+  .pil .pn{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--meli);margin-bottom:10px}
+  .pil h5{font-size:14.5px;font-weight:600;line-height:1.2;margin-bottom:6px}
+  .pil p{font-size:12px;color:var(--dim);font-weight:300}
+  .pil.wide{grid-column:span 1}
+
+  /* ===== TAB 3 — CASOS DE USO ===== */
+  .uc-hero{padding:74px 0 8px}
+  .uc-hero h1{font-size:42px;font-weight:800;line-height:1.08;letter-spacing:-1.4px;max-width:22ch}
+  .uc-hero p{margin-top:18px;color:var(--dim);font-weight:300;font-size:16px;max-width:70ch}
+  .agreed{margin-top:26px;padding:15px 22px;border-radius:14px;border:1px solid var(--line);background:rgba(0,150,250,.06);display:flex;align-items:center;gap:14px;font-size:13.5px;color:var(--dim)}
+  .agreed b{color:var(--text);font-weight:600}.agreed .tagx{margin-left:auto}
+  .ucgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:30px}
+  .uc{border:1px solid var(--line-soft);border-radius:20px;background:var(--surface);padding:28px 28px 24px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+  .uc:hover{transform:translateY(-5px);border-color:var(--line)}
+  .uc::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--blip),transparent)}
+  .uc.prio::before{background:linear-gradient(90deg,var(--meli),transparent)}
+  .uc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
+  .uc-num{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--blip);letter-spacing:1px}
+  .uc.prio .uc-num{color:var(--meli)}
+  .uc-badge{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:6px;font-weight:600}
+  .uc-badge.start{background:var(--line-meli);color:var(--meli)}.uc-badge.now{background:rgba(0,150,250,.16);color:var(--blip)}
+  .uc h3{font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1.15;margin-bottom:8px}
+  .uc .one{font-size:13.5px;color:var(--blip);font-weight:500;margin-bottom:11px}
+  .uc.prio .one{color:var(--meli-2)}
+  .uc .desc{font-size:13.5px;color:var(--dim);font-weight:300;line-height:1.55}
+  .uc .foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);display:flex;gap:8px;flex-wrap:wrap}
+  .refs{margin:16px 0 50px;padding:28px 30px;border-radius:18px;border:1px solid var(--line-soft);background:var(--bg-2)}
+  .refs .rh{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:18px}
+  .refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .ref{padding:0 20px;border-left:2px solid var(--line)}
+  .ref .who{font-size:12px;color:var(--mute);font-family:var(--mono);letter-spacing:.5px;margin-bottom:8px}
+  .ref .big{font-size:23px;font-weight:800;letter-spacing:-.8px;margin-bottom:8px}
+  .ref .big.y{color:var(--meli)}.ref .big.b{color:var(--blip)}
+  .ref .t{font-size:13px;color:var(--dim);font-weight:300;line-height:1.5}
+  .ref .src{margin-top:10px;font-size:10.5px;color:var(--mute)}
+
+  /* ===== TAB 4 — ARQUITETURA ===== */
+  .arch-hero{padding:74px 0 28px}
+  .hero-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:54px;align-items:start}
+  .hero-grid h1{font-size:42px;font-weight:800;line-height:1.08;letter-spacing:-1.4px}
+  .hero-grid p{margin-top:20px;color:var(--dim);font-weight:300;font-size:15.5px;max-width:60ch}
+  .hero-meta{border-left:1px solid var(--line-soft);padding-left:28px;display:flex;flex-direction:column;gap:18px}
   .hero-meta .label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
-  .hero-meta .value{display:block;font-size:14.5px;color:var(--text);font-weight:500}
-
-  .section-title{padding:30px 0 10px}
-  .section-title h2{font-size:30px;font-weight:700;letter-spacing:-.8px;margin-bottom:14px}
-  .section-title p{color:var(--dim);font-weight:300;font-size:15px;max-width:90ch}
-
-  .legend{display:flex;gap:28px;margin:26px 0 10px;flex-wrap:wrap}
+  .hero-meta .value{display:block;font-size:14px;color:var(--text);font-weight:500}
+  .legend{display:flex;gap:28px;margin:22px 0 6px;flex-wrap:wrap}
   .legend .item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--dim);font-weight:300}
   .legend .ln{width:30px;height:0;border-top:2px solid}
-  .legend .ln.blue{border-color:var(--blip)}
-  .legend .ln.green{border-color:var(--green);border-top-style:dashed}
-  .legend .ln.white{border-color:rgba(255,255,255,.6)}
-
-  /* ===== DIAGRAM ===== */
-  .stage{margin:30px 0 50px;padding:46px 40px 50px;border-radius:24px;border:1px solid var(--line-soft);background:linear-gradient(180deg,var(--bg-2),rgba(10,15,28,.4));position:relative;overflow:hidden}
+  .legend .ln.blue{border-color:var(--blip)}.legend .ln.green{border-color:var(--green);border-top-style:dashed}.legend .ln.white{border-color:rgba(255,255,255,.6)}
+  .stage{margin:26px 0 14px;padding:42px 38px 46px;border-radius:24px;border:1px solid var(--line-soft);background:linear-gradient(180deg,var(--bg-2),rgba(10,15,28,.4));position:relative;overflow:hidden}
   .stage::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:26px 26px;opacity:.6;pointer-events:none}
   .stage>*{position:relative;z-index:1}
-
-  /* channel band */
+  .badge-real{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:6px;background:var(--line-meli);color:var(--meli);margin-bottom:18px;font-weight:600}
   .band-label{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:14px}
-  .channel{display:flex;justify-content:center;gap:14px}
-  .chan-node{display:flex;align-items:center;gap:10px;padding:13px 22px;border-radius:13px;border:1px solid var(--line-soft);background:var(--surface)}
+  .channel{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .chan-node{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:13px;border:1px solid var(--line-soft);background:var(--surface)}
   .chan-node.wa{border-color:rgba(37,211,102,.4);background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(37,211,102,.03))}
-  .chan-node .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .chan-node .ic{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
   .chan-node.wa .ic{background:var(--green);color:#04121f;font-weight:800}
-  .chan-node .nm{font-size:14px;font-weight:500}
-  .chan-node .sub{font-size:11px;color:var(--mute);font-family:var(--mono)}
-
-  /* vertical connector (white) */
+  .chan-node .nm{font-size:13.5px;font-weight:500}.chan-node .sub{font-size:10.5px;color:var(--mute);font-family:var(--mono)}
   .vconn{display:flex;flex-direction:column;align-items:center;margin:6px 0}
-  .vconn .ll{width:2px;height:34px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(0,150,250,.5))}
-  .vconn .ar{color:rgba(255,255,255,.6);font-size:14px;margin-top:-6px}
-
-  /* hub */
-  .hub{margin:0 auto;max-width:760px;border-radius:18px;border:1px solid var(--blip);background:linear-gradient(135deg,rgba(0,150,250,.16),rgba(0,150,250,.04));padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;box-shadow:0 0 50px rgba(0,150,250,.18)}
-  .hub-left{display:flex;align-items:center;gap:18px}
-  .hub-mark{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#04121f;flex-shrink:0}
-  .hub-txt .t{font-size:19px;font-weight:700;letter-spacing:-.4px}
-  .hub-txt .s{font-size:12.5px;color:var(--dim);font-weight:300;margin-top:3px}
+  .vconn .ll{width:2px;height:30px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(0,150,250,.5))}
+  .vconn .ar{color:rgba(255,255,255,.6);font-size:13px;margin-top:-6px}
+  .hub{margin:0 auto;max-width:820px;border-radius:18px;border:1px solid var(--blip);background:linear-gradient(135deg,rgba(0,150,250,.16),rgba(0,150,250,.04));padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;box-shadow:0 0 50px rgba(0,150,250,.18)}
+  .hub-left{display:flex;align-items:center;gap:16px}
+  .hub-mark{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#04121f;flex-shrink:0}
+  .hub-txt .t{font-size:17px;font-weight:700;letter-spacing:-.4px}.hub-txt .s{font-size:12px;color:var(--dim);font-weight:300;margin-top:3px}
   .hub-proto{display:flex;gap:8px}
-  .hub-proto .p{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;padding:7px 12px;border-radius:8px;background:rgba(0,150,250,.16);color:var(--blip);border:1px solid var(--line)}
-
-  /* split into two sides + bridge */
-  .split{display:grid;grid-template-columns:1fr 132px 1fr;gap:0;margin-top:14px;align-items:stretch}
+  .hub-proto .p{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;padding:7px 11px;border-radius:8px;background:rgba(0,150,250,.16);color:var(--blip);border:1px solid var(--line)}
   .vconn-split{display:flex;justify-content:space-around;margin:6px 0 14px}
-  .vconn-split .ll{width:2px;height:30px;background:linear-gradient(180deg,rgba(0,150,250,.5),rgba(0,150,250,.15))}
-
-  .side{border-radius:18px;padding:24px 22px}
+  .vconn-split .ll{width:2px;height:26px;background:linear-gradient(180deg,rgba(0,150,250,.5),rgba(0,150,250,.15))}
+  .split{display:grid;grid-template-columns:1fr 128px 1fr;gap:0;align-items:stretch}
+  .side{border-radius:18px;padding:22px 20px}
   .side.aqui{border:1px solid var(--line);background:linear-gradient(160deg,rgba(0,150,250,.07),transparent)}
   .side.la{border:1px solid var(--line-meli);background:linear-gradient(160deg,rgba(255,230,0,.05),transparent)}
-  .side-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .side-head .h{font-size:15px;font-weight:700;letter-spacing:-.2px}
+  .side-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .side-head .h{font-size:14px;font-weight:700;letter-spacing:-.2px;max-width:74%}
   .side-head .where{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:6px}
-  .side.aqui .where{background:rgba(0,150,250,.14);color:var(--blip)}
-  .side.la .where{background:var(--line-meli);color:var(--meli)}
-
-  .node{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft);margin-bottom:10px;transition:transform .25s,border-color .25s}
-  .node:last-child{margin-bottom:0}
-  .node:hover{transform:translateX(3px);border-color:var(--line)}
+  .side.aqui .where{background:rgba(0,150,250,.14);color:var(--blip)}.side.la .where{background:var(--line-meli);color:var(--meli)}
+  .node{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft);margin-bottom:9px;transition:transform .25s,border-color .25s}
+  .node:last-child{margin-bottom:0}.node:hover{transform:translateX(3px);border-color:var(--line)}
   .node .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
   .side.aqui .node .dot{background:var(--blip);box-shadow:0 0 10px rgba(0,150,250,.6)}
   .side.la .node .dot{background:var(--meli);box-shadow:0 0 10px rgba(255,230,0,.5)}
+  .side.la .node.human .dot{background:var(--green);box-shadow:0 0 10px rgba(37,211,102,.5)}
   .node .nbody{flex:1}
-  .node .nt{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:3px}
-  .node .nd{font-size:12px;color:var(--dim);font-weight:300;line-height:1.4}
-
-  /* bridge */
-  .bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 8px}
-  .bridge .blabel{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--mute);writing-mode:vertical-rl;text-orientation:mixed;position:absolute}
+  .node .nt{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;margin-bottom:3px;flex-wrap:wrap}
+  .node .nd{font-size:11.5px;color:var(--dim);font-weight:300;line-height:1.4}
+  .bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 6px}
   .flow{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
   .flow .proto{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:1px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--blip);white-space:nowrap}
   .flow .proto.mcp{color:var(--green);border-color:rgba(37,211,102,.3)}
@@ -173,16 +216,18 @@
   .arr-line{position:relative;width:100%;height:2px;background:repeating-linear-gradient(90deg,var(--blip) 0 8px,transparent 8px 14px);animation:dash 1s linear infinite}
   .arr-line.g{background:repeating-linear-gradient(90deg,var(--green) 0 8px,transparent 8px 14px)}
   @keyframes dash{to{background-position:14px 0}}
-  .arr-bi{font-size:13px;color:var(--blip);letter-spacing:-2px}
-  .arr-bi.g{color:var(--green)}
-  .bridge-note{font-size:11px;color:var(--mute);text-align:center;font-weight:300;line-height:1.4;max-width:120px}
-
-  /* footer meta */
-  .meta-foot{margin-top:10px;padding:26px 30px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);display:grid;grid-template-columns:repeat(2,1fr);gap:14px 40px}
+  .arr-bi{font-size:12px;color:var(--blip);letter-spacing:-2px}.arr-bi.g{color:var(--green)}
+  .bridge-note{font-size:10.5px;color:var(--mute);text-align:center;font-weight:300;line-height:1.4;max-width:116px}
+  .principle{margin-top:20px;padding:22px 28px;border-radius:16px;display:flex;align-items:center;gap:18px}
+  .principle.hybrid{border:1px solid var(--line-meli);background:linear-gradient(135deg,rgba(255,230,0,.06),transparent)}
+  .principle.guard{border:1px solid rgba(37,211,102,.25);background:linear-gradient(135deg,rgba(37,211,102,.05),transparent)}
+  .principle .q{font-size:28px;font-weight:800;line-height:1}
+  .principle.hybrid .q{color:var(--meli)}.principle.guard .q{color:var(--green)}
+  .principle .pt{font-size:15px;font-weight:300;color:var(--text);line-height:1.5}.principle .pt b{font-weight:700}
+  .meta-foot{margin-top:18px;padding:24px 30px;border-radius:16px;border:1px solid var(--line-soft);background:var(--surface);display:grid;grid-template-columns:repeat(2,1fr);gap:13px 40px}
   .meta-foot .row{font-size:13px;color:var(--dim);font-weight:300}
   .meta-foot .row .k{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--blip);margin-right:8px}
   .meta-foot .row .k.y{color:var(--meli)}
-
   .footer{padding:40px 0 70px;text-align:center;color:var(--mute);font-size:12px;font-family:var(--mono);letter-spacing:.5px}
 </style>
 </head>
@@ -190,68 +235,216 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-mark">b</div>
-      Blip <span class="x">×</span> <span class="m">Mercado Livre</span>
-    </div>
+    <div class="brand"><div class="brand-mark">b</div> Blip <span class="x">×</span> <span class="m">Mercado Livre</span></div>
     <div class="tabs">
-      <button class="tab active" data-tab="intro">Visão Blip</button>
+      <button class="tab active" data-tab="visao">Visão</button>
+      <button class="tab" data-tab="mp">Mercado Pago</button>
+      <button class="tab" data-tab="casos">Casos de uso</button>
       <button class="tab" data-tab="arch">Arquitetura</button>
     </div>
   </div>
 </div>
 
-<!-- ============ TAB 1 — INTRO ============ -->
-<div class="panel active" id="panel-intro">
-  <section class="container intro-hero">
-    <div class="kicker"><span class="pulse"></span> A Blip já opera o WhatsApp oficial do Mercado Livre</div>
-    <h1>A camada de inteligência conversacional <span class="accent">já dentro de casa.</span></h1>
-    <p class="lead">A Blip é uma plataforma de inteligência conversacional com <strong>25 anos de trajetória</strong>, presente em 32 países e escolhida por mais de 4.000 marcas. Esta conversa não é sobre entrada — é sobre <strong>o próximo nível de orquestração</strong> do ecossistema Mercado Livre no WhatsApp.</p>
-
-    <div class="intro-grid">
+<!-- ============ TAB 1 — VISÃO ============ -->
+<div class="panel active" id="panel-visao">
+  <section class="container hero">
+    <div class="kicker"><span class="pulse"></span> Material de apoio · apresentação ao time de Aquisição</div>
+    <h1>Unificar o WhatsApp do Mercado Livre e transformá-lo em <span class="accent">motor de vendas incrementais.</span></h1>
+    <p class="lead">Hoje o WhatsApp do Mercado Livre está fragmentado entre Atendimento, Logística e Marketing. A proposta é uma <strong>arquitetura híbrida</strong> em que a Blip orquestra jornada e canais — enquanto a inteligência e os agentes do ML permanecem dentro de casa. E já temos prova disso rodando no Mercado Pago.</p>
+    <div class="istats">
       <div class="istat"><div class="n">25 anos</div><div class="l">de inteligência conversacional</div></div>
       <div class="istat"><div class="n">32</div><div class="l">países de operação</div></div>
       <div class="istat"><div class="n">+4.000</div><div class="l">marcas — 240 das 500 maiores do mundo</div></div>
       <div class="istat"><div class="n">2016</div><div class="l">aliada oficial Meta desde então</div></div>
     </div>
-
-    <div class="intro-band">
+    <div class="band">
       <div class="icon">🤝</div>
       <div class="txt">
-        <h3>Já parceira de tecnologia do Mercado Livre no WhatsApp</h3>
-        <p>A Blip é a <b>camada que orquestra os sistemas e agentes do Mercado Livre</b> e os leva à conversa — onde o cliente já está. A arquitetura está na aba ao lado.</p>
+        <h3>Já parceira de tecnologia do Mercado Livre — e do Mercado Pago</h3>
+        <p>Existe um <b>Master Agreement</b> entre Blip e Mercado Livre, com contratações por unidade de negócio. No Mercado Pago, já operamos <b>Go Personal e Bot Farming</b> em produção. Não estamos pedindo entrada — estamos propondo <b>escalar a colaboração</b>.</p>
+      </div>
+    </div>
+    <div class="section-title"><h2>Onde estamos, e por que a Blip.</h2></div>
+    <div class="two">
+      <div class="col moment">
+        <h4><span class="dotc"></span> O momento do Mercado Livre</h4>
+        <div class="li"><span class="mk">01</span><div>Sem gestão centralizada de WhatsApp — iniciativas <b>fragmentadas</b> entre áreas. Prioridade: unificar a visão e criar um <b>guia de estilo</b> da marca.</div></div>
+        <div class="li"><span class="mk">02</span><div>Marketing precisa impulsionar <b>vendas incrementais</b>, hoje limitado por ferramentas internas e uso pouco eficiente de provedores externos.</div></div>
+        <div class="li"><span class="mk">03</span><div>Defasagem entre as ferramentas internas e o que o mercado já oferece — há espaço e intenção de mudar.</div></div>
+      </div>
+      <div class="col why">
+        <h4><span class="dotc"></span> O diferencial da Blip</h4>
+        <div class="li"><span class="mk">01</span><div><b>Acelerador de Go-to-Market:</b> acesso antecipado a programas alfa e beta da Meta — recursos avançados antes do mercado.</div></div>
+        <div class="li"><span class="mk">02</span><div><b>WhatsApp Flows</b> e componentes dinâmicos, além de testes alfa do modelo de leilão (<b>Max Price</b>) já rodando com clientes Blip.</div></div>
+        <div class="li"><span class="mk">03</span><div>Modelo <b>híbrido</b>: Blip orquestra jornada e canais; a inteligência permanece no ML. Sem dependência exclusiva de terceiros.</div></div>
+      </div>
+    </div>
+    <div class="backers"><span>Respaldo de investidores:</span> Microsoft <span class="sep">·</span> SoftBank <span class="sep">·</span> Warburg Pincus</div>
+  </section>
+</div>
+
+<!-- ============ TAB 2 — MERCADO PAGO ============ -->
+<div class="panel" id="panel-mp">
+  <section class="container mp-hero">
+    <div class="eyebrow">O que já entregamos · e os próximos passos</div>
+    <h1>A parceria com o Mercado Pago <span class="accent">já entrega — e tem muito a escalar.</span></h1>
+    <p>No Farming do Mercado Pago, a Blip já opera relacionamento consultivo, FAQ e notificações ativas em produção. A oportunidade está em conectar essas peças com dados, IA e cadência — elevando TPV, reduzindo churn e aumentando produtividade.</p>
+    <div class="mpctx">
+      <div class="mpc"><div class="v">US$ 4,0B</div><div class="d">Receita Fintech</div><div class="yoy">+51% YoY · Q1/26</div></div>
+      <div class="mpc"><div class="v">83 mi</div><div class="d">Fintech MAUs</div><div class="yoy">+29% YoY · Q1/26</div></div>
+      <div class="mpc"><div class="v">4,6 bi</div><div class="d">Transações</div><div class="yoy">+39% YoY · Q1/26</div></div>
+      <div class="mpc"><div class="v">~US$ 20B</div><div class="d">AUM</div><div class="yoy">+77% YoY · Q1/26</div></div>
+    </div>
+    <div class="src-line">Fontes públicas: release MercadoLibre Q1 2026 · Investor Relations.</div>
+  </section>
+
+  <section class="container">
+    <div class="subhead">O que já rodamos hoje</div>
+    <div class="prodgrid">
+      <div class="prod">
+        <div class="ph"><h3>Go Personal</h3><span class="tagx a">produto Blip · em produção</span></div>
+        <div class="pd">Atendimento consultivo individualizado no WhatsApp com governança, histórico, métricas e WABA dedicada — alternativa segura ao WhatsApp pessoal do consultor.</div>
+        <div class="mgrid">
+          <div class="metric"><div class="mv">62</div><div class="ml">números em uso</div><div class="mt">fluxos Farming</div></div>
+          <div class="metric"><div class="mv">139</div><div class="ml">templates ativos</div><div class="mt">36 temas</div></div>
+          <div class="metric"><div class="mv">77,1%</div><div class="ml">CSAT acumulado</div><div class="mt">meta 80%</div></div>
+          <div class="metric"><div class="mv">27%</div><div class="ml">taxa de resposta</div><div class="mt">+3% MoM</div></div>
+        </div>
+      </div>
+      <div class="prod">
+        <div class="ph"><h3>Bot Farming</h3><span class="tagx a">FAQ Studio · em produção</span></div>
+        <div class="pd">FAQ no Studio para Consultor Certificado e Farming Remoto, gerando engajamento e deflection — com espaço para evoluir a jornadas proativas conectadas a objetivos de negócio.</div>
+        <div class="mgrid">
+          <div class="metric"><div class="mv">1.425</div><div class="ml">exibições FAQ</div><div class="mt">abr/26</div></div>
+          <div class="metric"><div class="mv">71%</div><div class="ml">engajamento FAQ</div><div class="mt">abr/26</div></div>
+          <div class="metric"><div class="mv">75%</div><div class="ml">taxa de resposta</div><div class="mt">abr/26</div></div>
+          <div class="metric"><div class="mv">67,4%</div><div class="ml">CSAT Consultor Cert.</div><div class="mt">abr/26</div></div>
+        </div>
       </div>
     </div>
 
-    <div class="backers">
-      <span>Respaldo de investidores:</span> Microsoft <span class="sep">·</span> SoftBank <span class="sep">·</span> Warburg Pincus
+    <div class="subhead">O modelo comercial que sustenta a operação · FAST</div>
+    <div class="fast">
+      <div class="fstep"><div class="fl">ETAPA 1</div><div class="fbig"><div class="fc">S</div><div class="fn">Score</div></div><div class="fd">Prioriza sellers por sinais de negócio e potencial (1 a 5).</div></div>
+      <div class="fstep"><div class="fl">ETAPA 2</div><div class="fbig"><div class="fc">A</div><div class="fn">Agenda</div></div><div class="fd">Define cadência, objetivo e janela de contato do consultor.</div></div>
+      <div class="fstep"><div class="fl">ETAPA 3</div><div class="fbig"><div class="fc">T</div><div class="fn">Tarefa</div></div><div class="fd">Transforma intenção comercial em atividade executável.</div></div>
+      <div class="fstep"><div class="fl">ETAPA 4</div><div class="fbig"><div class="fc">T</div><div class="fn">Tag · Alarme</div></div><div class="fd">Registra contexto e dispara gatilhos de follow-up.</div></div>
+    </div>
+
+    <div class="subhead">Metodologia de growth comprovada · Mesa de Performance</div>
+    <div class="mesa">
+      <div class="mh"><h3>Disciplina de growth aplicada à plataforma</h3><span class="tagx h">resultado real · outra conta estratégica</span></div>
+      <div class="msub">Hipóteses, micro-segmentação A/B/C/D e ciclos 80/20 com ritual semanal. Resultado em 1 mês completo de mesa (Mar/26), em outra conta estratégica:</div>
+      <div class="mesa-stats">
+        <div class="ms"><div class="v">R$ 11,3 MM</div><div class="l">produção geral</div><div class="top">Top #2 · últimos 6 meses</div></div>
+        <div class="ms"><div class="v">R$ 4,9 MM</div><div class="l">produção via N.A.</div><div class="top">Top #1 · últimos 6 meses</div></div>
+        <div class="ms"><div class="v">R$ 0,019</div><div class="l">CAC com &gt;R$70K</div><div class="top">Top #1 · série histórica</div></div>
+        <div class="ms"><div class="v">R$ 27,61</div><div class="l">custo N.A. / acordo</div><div class="top">Top #1 · últimos 6 meses</div></div>
+      </div>
+      <div class="mesa-learn"><b>Aprendizados:</b> segmentação certa rende +10 p.p. acima da média · gatilho de fraseologia +6 p.p. · reengajamento low-cost cortou CAC em 23%.</div>
+    </div>
+
+    <div class="subhead">Próximos passos por lá · 7 territórios de oportunidade</div>
+    <div class="pilares">
+      <div class="pil"><div class="pn">P1</div><h5>Ativação do não-carteirizado</h5><p>Ativar LT órfão com escala e baixo custo por seller.</p></div>
+      <div class="pil"><div class="pn">P2</div><h5>Engajamento carteirizado</h5><p>Tornar cada consultor mais produtivo.</p></div>
+      <div class="pil"><div class="pn">P3</div><h5>Reativação de churn</h5><p>Detectar e reverter queda de TPV antes do churn.</p></div>
+      <div class="pil"><div class="pn">P4</div><h5>Cross-sell & upsell</h5><p>Expandir receita por seller no ecossistema.</p></div>
+      <div class="pil"><div class="pn">P5</div><h5>Performance de N.A.</h5><p>Elevar engajamento e reduzir falhas de notificação.</p></div>
+      <div class="pil"><div class="pn">P6</div><h5>Atendimento & CSAT</h5><p>Reduzir espera, abandono e fricção.</p></div>
+      <div class="pil"><div class="pn">P7</div><h5>Dados, governança & IA</h5><p>Converter comportamento em ações automáticas.</p></div>
+      <div class="pil" style="background:linear-gradient(160deg,rgba(255,230,0,.06),transparent);border-color:var(--line-meli)"><div class="pn">→</div><h5>Princípio</h5><p>Ganham força iniciativas que cruzam 2+ pilares com dados/IA como alavanca.</p></div>
+    </div>
+    <div class="src-line" style="margin-bottom:50px">Fontes internas: Pré-reading Workshop Farming (Maio/2026) · dashboards Go Personal e Bot Farming (mar–abr/2026) · Mesa de Performance.</div>
+  </section>
+</div>
+
+<!-- ============ TAB 3 — CASOS DE USO ============ -->
+<div class="panel" id="panel-casos">
+  <section class="container uc-hero">
+    <div class="eyebrow">O que podemos escalar para todo o Mercado Livre</div>
+    <h1>Casos de uso priorizados <span class="accent">por onde começar.</span></h1>
+    <p>O modelo provado no Mercado Pago, aplicado aos desafios de Aquisição do Mercado Livre — com foco no que gera venda incremental mais rápido.</p>
+    <div class="agreed">✓ <b>Ações já acordadas:</b>&nbsp; testar Leilão Meta (Max Price) · campanhas de ativação · integração do Mercado Pago como pagamento <span class="tagx a">backlog inicial</span></div>
+  </section>
+  <section class="container">
+    <div class="ucgrid">
+      <div class="uc prio">
+        <div class="uc-top"><span class="uc-num">CASO 01</span><span class="uc-badge start">Começar por aqui</span></div>
+        <h3>Ativação & "Never Buyers"</h3>
+        <div class="one">Transformar a base que nunca comprou em primeira venda.</div>
+        <div class="desc">Jornadas conversacionais para novos usuários, reativação e incentivo à primeira compra. A maior parte da base não abre o app com frequência — o WhatsApp passa a ser o canal estratégico para alcançá-la e gerar venda incremental.</div>
+        <div class="foot"><span class="tagx y">Vendas incrementais</span><span class="tagx s">Marketing · Aquisição</span></div>
+      </div>
+      <div class="uc prio">
+        <div class="uc-top"><span class="uc-num">CASO 02</span><span class="uc-badge now">Prioridade</span></div>
+        <h3>Mercado Pago como pagamento nativo</h3>
+        <div class="one">Pagar sem sair da conversa.</div>
+        <div class="desc">Mercado Pago integrado como meio de pagamento nativo na jornada conversacional — Pix, boleto e checkout dentro do WhatsApp, aproveitando a inteligência do próprio Pago. Estudos de caso para apoiar a decisão da área.</div>
+        <div class="foot"><span class="tagx a">Mercado Pago</span><span class="tagx s">Pagamentos</span></div>
+      </div>
+      <div class="uc">
+        <div class="uc-top"><span class="uc-num">CASO 03</span></div>
+        <h3>Afiliados — números ativos no lugar de "canais"</h3>
+        <div class="one">Parceiros engajados em conversas reais.</div>
+        <div class="desc">Substituir soluções de "canais" por números de WhatsApp ativos e responsivos, mantendo os afiliados engajados com conteúdo, respostas e suporte em tempo real — em vez de uma comunicação passiva e de mão única.</div>
+        <div class="foot"><span class="tagx a">Afiliados</span><span class="tagx s">Engajamento</span></div>
+      </div>
+      <div class="uc">
+        <div class="uc-top"><span class="uc-num">CASO 04</span></div>
+        <h3>Blip Cred — crédito no WhatsApp</h3>
+        <div class="one">Contratação de crédito ponta a ponta.</div>
+        <div class="desc">Gestão completa de jornadas de contratação de crédito via WhatsApp, já implementada com sucesso em instituições financeiras. Frente natural para o ecossistema do Mercado Pago — priorização conforme o backlog de integrações.</div>
+        <div class="foot"><span class="tagx a">Crédito</span><span class="tagx s">Mercado Pago</span></div>
+      </div>
+      <div class="uc">
+        <div class="uc-top"><span class="uc-num">CASO 05</span><span class="uc-badge now">Diferencial Blip</span></div>
+        <h3>WhatsApp Flows & acesso antecipado à Meta</h3>
+        <div class="one">Recursos avançados antes do mercado.</div>
+        <div class="desc">Como aliada oficial Meta, a Blip dá acesso a programas alfa/beta — WhatsApp Flows, componentes dinâmicos e os testes do modelo de leilão (Max Price) — acelerando o go-to-market e validando eficiência antes dos benchmarks públicos.</div>
+        <div class="foot"><span class="tagx a">GTM accelerator</span><span class="tagx s">Meta · Flows</span></div>
+      </div>
+      <div class="uc">
+        <div class="uc-top"><span class="uc-num">CASO 06</span></div>
+        <h3>Comunicação unificada & guia de estilo</h3>
+        <div class="one">Uma só voz no WhatsApp.</div>
+        <div class="desc">Centralizar a gestão hoje dispersa entre Atendimento, Logística e Marketing sob um guia de estilo único — padronizando marca e tom, otimizando provedores e eliminando o desperdício de recursos. A base que destrava as demais frentes.</div>
+        <div class="foot"><span class="tagx a">Governança</span><span class="tagx s">Marca · Eficiência</span></div>
+      </div>
+    </div>
+    <div class="refs">
+      <div class="rh">Referências de mercado · o que já é realidade no WhatsApp brasileiro</div>
+      <div class="refgrid">
+        <div class="ref"><div class="who">Varejo · concorrente direto</div><div class="big y">1ª do mundo</div><div class="t">A Magalu (Lu) virou a primeira varejista a fechar 100% da jornada de compra no WhatsApp — descoberta, pagamento e pós-venda.</div><div class="src">Fontes: Magalu, Exame — nov/2025</div></div>
+        <div class="ref"><div class="who">Dentro de casa · Mercado Pago</div><div class="big b">68M+</div><div class="t">O assistente de IA do Mercado Pago já está em produção (out/2025), rumo ao pagamento conversacional. O agente existe — falta levá-lo ao canal.</div><div class="src">Fontes: CNN Brasil, Mobile Time — 2025/26</div></div>
+        <div class="ref"><div class="who">Fintech · vizinho do Pago</div><div class="big b">+R$2bi</div><div class="t">A Magie movimentou mais de R$2bi como "assistente que conecta" — não compete com bancos, orquestra. Espelha a tese híbrida.</div><div class="src">Fontes: Startups, Exame — 2025/26</div></div>
+      </div>
     </div>
   </section>
 </div>
 
-<!-- ============ TAB 2 — ARCHITECTURE ============ -->
+<!-- ============ TAB 4 — ARQUITETURA ============ -->
 <div class="panel" id="panel-arch">
-
   <section class="container arch-hero">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Arquitetura de orquestração</div>
+        <div class="eyebrow">Arquitetura híbrida de orquestração</div>
         <h1>Sistemas conversacionais lá e aqui,<br><span class="accent">conversando entre si.</span></h1>
-        <p>O Mercado Livre já tem inteligência própria — o agente de IA do Mercado Pago, recomendação, antifraude e risco rodando há uma década. A Blip não reconstrói isso: orquestra esses sistemas e agentes via protocolos abertos (A2A e MCP) e os leva ao WhatsApp como uma jornada única.</p>
+        <p>A Blip orquestra jornada e canais; a inteligência e os agentes autônomos permanecem dentro do Mercado Livre — conectados por protocolos abertos (A2A e MCP). O desenho abaixo é a instanciação real validada no Farming do Mercado Pago.</p>
       </div>
       <div class="hero-meta">
-        <div><span class="label">Orquestrador</span><span class="value">Blip Studio · Agent-to-Agent (A2A)</span></div>
-        <div><span class="label">Sistemas de registro (ML)</span><span class="value">Mercado Pago · Catálogo · Mercado Envios</span></div>
-        <div><span class="label">Inteligências (ML)</span><span class="value">Recomendação · Antifraude · Mercado Ads</span></div>
-        <div><span class="label">Canais</span><span class="value">WhatsApp · Click-to-WhatsApp · RCS</span></div>
+        <div><span class="label">Orquestrador (jornada + canais)</span><span class="value">Blip Studio · Multi-Agente · A2A</span></div>
+        <div><span class="label">Agentes de escala (Blip)</span><span class="value">FAQ · Consultor · Campanhas</span></div>
+        <div><span class="label">Inteligência & humano (ML)</span><span class="value">Agente MP · Consultores · Recomendação</span></div>
+        <div><span class="label">Canais</span><span class="value">WhatsApp · Click-to-WA · Flows · RCS</span></div>
       </div>
     </div>
   </section>
 
   <section class="container section-title">
     <div class="eyebrow">Uma página · dois lados · um orquestrador</div>
-    <h2>Como a Blip orquestra o ecossistema Mercado Livre.</h2>
-    <p>O Blip Studio recebe a conversa no WhatsApp e roteia, agente a agente, para os sistemas e agentes que o Mercado Livre já mantém — devolvendo contexto e sinais para enriquecê-los em tempo real.</p>
+    <h2>O modelo híbrido — validado no Farming, generalizável para todo o ML.</h2>
+    <p>O Blip Studio recebe a conversa no WhatsApp e roteia, agente a agente, para a inteligência que o Mercado Livre já mantém — devolvendo contexto e sinais para enriquecê-la em tempo real.</p>
     <div class="legend">
       <div class="item"><span class="ln blue"></span> Orquestração agente-a-agente (A2A)</div>
       <div class="item"><span class="ln green"></span> Contexto, dados e ferramentas via MCP</div>
@@ -261,92 +454,64 @@
 
   <section class="container">
     <div class="stage">
-
-      <!-- CHANNEL -->
-      <div class="band-label">Onde o cliente está</div>
+      <div class="badge-real">Instanciação validada · Farming Mercado Pago</div>
+      <div class="band-label">Onde o cliente / seller está</div>
       <div class="channel">
         <div class="chan-node wa"><div class="ic">W</div><div><div class="nm">WhatsApp</div><div class="sub">canal primário</div></div></div>
         <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">↗</div><div><div class="nm">Click-to-WhatsApp</div><div class="sub">Ads → conversa</div></div></div>
-        <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">≡</div><div><div class="nm">RCS</div><div class="sub">canal complementar</div></div></div>
+        <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">⚡</div><div><div class="nm">WhatsApp Flows</div><div class="sub">componentes dinâmicos</div></div></div>
+        <div class="chan-node"><div class="ic" style="background:rgba(0,150,250,.2);color:var(--blip)">≡</div><div><div class="nm">RCS</div><div class="sub">complementar</div></div></div>
       </div>
-
       <div class="vconn"><div class="ll"></div><div class="ar">▼</div></div>
-
-      <!-- HUB -->
       <div class="hub">
         <div class="hub-left">
           <div class="hub-mark">b</div>
-          <div class="hub-txt">
-            <div class="t">Blip Studio — Orquestrador Conversacional</div>
-            <div class="s">Recebe a conversa, identifica intenção e roteia para o agente certo — em cada lado.</div>
-          </div>
+          <div class="hub-txt"><div class="t">Blip Studio — Orquestrador de jornada e canais</div><div class="s">Recebe a conversa, identifica intenção e roteia para o agente certo — em cada lado.</div></div>
         </div>
-        <div class="hub-proto">
-          <span class="p">MULTI-AGENTE</span>
-          <span class="p">A2A</span>
-          <span class="p">MCP</span>
-        </div>
+        <div class="hub-proto"><span class="p">MULTI-AGENTE</span><span class="p">A2A</span><span class="p">MCP</span></div>
       </div>
-
       <div class="vconn-split"><div class="ll"></div><div class="ll"></div></div>
-
-      <!-- SPLIT: AQUI | BRIDGE | LÁ -->
       <div class="split">
-
-        <!-- AQUI (BLIP) -->
         <div class="side aqui">
-          <div class="side-head">
-            <div class="h">Agentes conversacionais Blip</div>
-            <div class="where">Aqui</div>
-          </div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Vendas <span class="tag agent">agente</span></div><div class="nd">Vitrine e descoberta no chat sobre o catálogo do ML.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Pagamentos <span class="tag agent">agente</span></div><div class="nd">Interface do Mercado Pago no WhatsApp: Pix, boleto, fatura.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Pós-venda <span class="tag agent">agente</span></div><div class="nd">Rastreamento, trocas e devoluções resolvidas na conversa.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de Growth & CRM <span class="tag agent">agente</span></div><div class="nd">Réguas de ciclo de vida, campanhas e Flows segmentados.</div></div></div>
+          <div class="side-head"><div class="h">Camada Blip — agentes de escala</div><div class="where">Aqui</div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agent FAQ <span class="tagx a">agente</span></div><div class="nd">Resolve dúvidas abertas, educa e direciona para fluxos ou consultor.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agent Consultor <span class="tagx a">agente</span></div><div class="nd">Gera briefing, recomenda template e próxima melhor ação.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agent Campanhas <span class="tagx a">agente</span></div><div class="nd">Propõe régua, público, texto, timing e hipótese de mensuração.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Governança, guia de estilo & cockpit <span class="tagx a">orquestra</span></div><div class="nd">Voz única da marca e visão unificada de funil, TPV e CSAT.</div></div></div>
         </div>
-
-        <!-- BRIDGE -->
         <div class="bridge">
-          <div class="flow">
-            <div class="proto">A2A</div>
-            <div class="arrows"><div class="arr-bi">◄────►</div><div class="arr-line"></div></div>
-          </div>
+          <div class="flow"><div class="proto">A2A</div><div class="arrows"><div class="arr-bi">◄────►</div><div class="arr-line"></div></div></div>
           <div class="bridge-note">agentes conversam<br>com agentes</div>
-          <div class="flow">
-            <div class="proto mcp">MCP</div>
-            <div class="arrows"><div class="arr-line g"></div><div class="arr-bi g">◄────►</div></div>
-          </div>
+          <div class="flow"><div class="proto mcp">MCP</div><div class="arrows"><div class="arr-line g"></div><div class="arr-bi g">◄────►</div></div></div>
           <div class="bridge-note">contexto, dados<br>e ferramentas</div>
         </div>
-
-        <!-- LÁ (MERCADO LIVRE) -->
         <div class="side la">
-          <div class="side-head">
-            <div class="h">Sistemas & agentes do Mercado Livre</div>
-            <div class="where">Lá</div>
-          </div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de IA do Mercado Pago <span class="tag agent-y">agente</span></div><div class="nd">Já em produção (out/2025), base de 68M+ na América Latina.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Motor de recomendação <span class="tag system">sistema</span></div><div class="nd">Personalização sobre catálogo 1P + 3P; +10 anos de IA.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Antifraude & risco <span class="tag system">sistema</span></div><div class="nd">Modelos de fraude e crédito — núcleo de confiança do ML.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Catálogo & Mercado Envios <span class="tag system">sistema</span></div><div class="nd">Estoque, frete e logística — sistemas de registro.</div></div></div>
-          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">CRM, identidade & Mercado Ads <span class="tag system">sistema</span></div><div class="nd">Dados próprios, perfil do cliente e otimização de lances.</div></div></div>
+          <div class="side-head"><div class="h">Infraestrutura interna do Mercado Livre</div><div class="where">Lá</div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Agente de IA do Mercado Pago <span class="tagx y">agente</span></div><div class="nd">Em produção desde out/2025 · base de 68M+ na América Latina.</div></div></div>
+          <div class="node human"><div class="dot"></div><div class="nbody"><div class="nt">Consultores humanos <span class="tagx h">humano</span></div><div class="nd">Farming Assessorado e contas estratégicas — relacionamento essencial.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Recomendação & antifraude <span class="tagx s">sistema</span></div><div class="nd">Personalização e confiança — +10 anos de IA aplicada.</div></div></div>
+          <div class="node"><div class="dot"></div><div class="nbody"><div class="nt">Sinais de TPV, CRM & dados <span class="tagx s">sistema</span></div><div class="nd">Score, churn, elegibilidade, catálogo e identidade do ML.</div></div></div>
         </div>
-
+      </div>
+      <div class="principle hybrid">
+        <div class="q">“</div>
+        <div class="pt">A Blip orquestra a jornada e os canais. <b>A inteligência e os agentes autônomos permanecem dentro do Mercado Livre.</b> Modelo híbrido proposto na conversa — escalar a colaboração sem abrir mão do controle.</div>
+      </div>
+      <div class="principle guard">
+        <div class="q">⛨</div>
+        <div class="pt"><b>Guardrail:</b> a IA atua como camada de escala e qualidade — o <b>consultor humano segue essencial</b> para contas estratégicas e momentos consultivos. Tecnologia amplia o time, não o substitui.</div>
       </div>
     </div>
-
-    <!-- META FOOTER -->
     <div class="meta-foot">
       <div class="row"><span class="k">Construído em</span> Blip Studio · Multi-Agente · A2A · MCP</div>
-      <div class="row"><span class="k y">Princípio</span> Orquestrar, não substituir — a inteligência permanece no Mercado Livre</div>
+      <div class="row"><span class="k y">Princípio</span> Orquestrar, não substituir — inteligência e humano ficam no ML</div>
       <div class="row"><span class="k">Setas azuis</span> A2A: agentes Blip ⇄ agentes do Mercado Pago</div>
-      <div class="row"><span class="k y">Setas verdes</span> MCP: catálogo, perfil e ferramentas voltam como contexto</div>
-      <div class="row"><span class="k">Fontes</span> CNN Brasil · Mobile Time · Rel. de resultados ML 4T25 · Meta</div>
-      <div class="row"><span class="k y">Canal</span> WhatsApp como ponto de venda e relacionamento</div>
+      <div class="row"><span class="k y">Setas verdes</span> MCP: sinais, dados e ferramentas como contexto</div>
+      <div class="row"><span class="k">Validado em</span> Farming Mercado Pago — FAQ · Consultor · Campanhas</div>
+      <div class="row"><span class="k y">Fontes</span> Pré-reading Farming · CNN Brasil · Rel. ML 4T25/Q1'26</div>
     </div>
   </section>
-
-  <div class="footer">Blip × Mercado Livre — visão de arquitetura preparada para a liderança de WhatsApp</div>
+  <div class="footer">Blip × Mercado Livre — material ilustrativo de apoio à apresentação ao time de Aquisição</div>
 </div>
 
 <script>
