@@ -229,9 +229,57 @@
   .meta-foot .row .k{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--blip);margin-right:8px}
   .meta-foot .row .k.y{color:var(--meli)}
   .footer{padding:40px 0 70px;text-align:center;color:var(--mute);font-size:12px;font-family:var(--mono);letter-spacing:.5px}
+
+  /* ===== PASSWORD GATE ===== */
+  #gate{display:none}
+  body.locked{overflow:hidden;height:100vh}
+  body.locked .topbar,body.locked .panel{display:none!important}
+  body.locked #gate{display:flex}
+  #gate{position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;
+    background:radial-gradient(1100px 700px at 80% -120px,rgba(0,150,250,.13),transparent 70%),radial-gradient(900px 520px at -120px 760px,rgba(255,230,0,.06),transparent 70%),var(--bg)}
+  #gate::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:26px 26px;opacity:.5;pointer-events:none}
+  .gate-card{position:relative;z-index:1;width:440px;padding:46px 42px 36px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(180deg,var(--surface),var(--bg-2));box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(0,150,250,.08);text-align:center;animation:gate-in .6s cubic-bezier(.2,.7,.2,1)}
+  @keyframes gate-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .gate-brand{display:flex;align-items:center;justify-content:center;gap:12px;font-weight:600;font-size:14px;letter-spacing:.3px;margin-bottom:28px}
+  .gate-brand .bm{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blip),var(--blip-2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#04121f;box-shadow:0 4px 20px rgba(0,150,250,.4)}
+  .gate-brand .x{color:var(--mute);font-weight:300}.gate-brand .m{color:var(--meli)}
+  .gate-lock{width:62px;height:62px;margin:0 auto 22px;border-radius:50%;border:1px solid var(--line);background:rgba(0,150,250,.06);display:flex;align-items:center;justify-content:center;font-size:25px;box-shadow:0 0 30px rgba(0,150,250,.12)}
+  .gate-card h2{font-size:24px;font-weight:800;letter-spacing:-.8px;margin-bottom:10px}
+  .gate-card h2 .accent{background:linear-gradient(100deg,var(--blip),var(--meli));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .gate-card .gsub{font-size:14px;color:var(--dim);font-weight:300;margin-bottom:26px;line-height:1.55}
+  .gate-field{position:relative;margin-bottom:14px}
+  #gate-input{width:100%;padding:15px 48px 15px 18px;border-radius:13px;border:1px solid var(--line-soft);background:var(--bg-2);color:var(--text);font-family:'Lexend',sans-serif;font-size:15px;letter-spacing:.5px;outline:none;transition:border-color .25s,box-shadow .25s}
+  #gate-input:focus{border-color:var(--blip);box-shadow:0 0 0 3px rgba(0,150,250,.15)}
+  #gate-input::placeholder{color:var(--mute);letter-spacing:.3px}
+  .gate-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--mute);font-size:16px;user-select:none}
+  .gate-eye:hover{color:var(--dim)}
+  #gate-btn{width:100%;padding:15px;border:none;border-radius:13px;background:linear-gradient(135deg,var(--blip),var(--blip-dim));color:#fff;font-family:'Lexend',sans-serif;font-weight:600;font-size:15px;letter-spacing:.3px;cursor:pointer;transition:transform .2s,box-shadow .25s;box-shadow:0 8px 24px rgba(0,150,250,.3)}
+  #gate-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,150,250,.42)}
+  #gate-btn:active{transform:translateY(0)}
+  .gate-err{height:18px;margin-top:12px;font-size:12.5px;color:#FF6B8A;font-family:var(--mono);letter-spacing:.3px;opacity:0;transition:opacity .25s}
+  .gate-err.show{opacity:1}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .gate-foot{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute)}
 </style>
 </head>
-<body>
+<body class="locked">
+
+<div id="gate">
+  <div class="gate-card" id="gate-card">
+    <div class="gate-brand"><span class="bm">b</span> Blip <span class="x">×</span> <span class="m">Mercado Livre</span></div>
+    <div class="gate-lock">🔒</div>
+    <h2>Material <span class="accent">confidencial</span></h2>
+    <div class="gsub">Esta apresentação é de acesso restrito.<br>Digite a senha para continuar.</div>
+    <div class="gate-field">
+      <input id="gate-input" type="password" placeholder="Senha de acesso" autocomplete="off" spellcheck="false">
+      <span class="gate-eye" id="gate-eye">👁</span>
+    </div>
+    <button id="gate-btn">Acessar material</button>
+    <div class="gate-err" id="gate-err">Senha incorreta. Tente novamente.</div>
+    <div class="gate-foot">Classificação · Interno</div>
+  </div>
+</div>
 
 <div class="topbar">
   <div class="topbar-inner">
@@ -515,6 +563,30 @@
 </div>
 
 <script>
+  const GATE_PASS='MercadoLivre&BlipVisao2030';
+  const gInput=document.getElementById('gate-input');
+  const gBtn=document.getElementById('gate-btn');
+  const gErr=document.getElementById('gate-err');
+  const gCard=document.getElementById('gate-card');
+  const gEye=document.getElementById('gate-eye');
+  function tryUnlock(){
+    if(gInput.value===GATE_PASS){
+      document.body.classList.remove('locked');
+      document.getElementById('gate').style.display='none';
+    }else{
+      gErr.classList.add('show');
+      gCard.classList.remove('shake');void gCard.offsetWidth;gCard.classList.add('shake');
+      gInput.value='';gInput.focus();
+    }
+  }
+  gBtn.addEventListener('click',tryUnlock);
+  gInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock();});
+  gInput.addEventListener('input',()=>gErr.classList.remove('show'));
+  gEye.addEventListener('mousedown',()=>{gInput.type='text';});
+  gEye.addEventListener('mouseup',()=>{gInput.type='password';});
+  gEye.addEventListener('mouseleave',()=>{gInput.type='password';});
+  window.addEventListener('load',()=>gInput.focus());
+
   const tabs=document.querySelectorAll('.tab');
   const panels=document.querySelectorAll('.panel');
   tabs.forEach(t=>t.addEventListener('click',()=>{
